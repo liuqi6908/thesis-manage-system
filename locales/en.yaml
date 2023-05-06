@@ -1,0 +1,121 @@
+title:
+  title: Graduation thesis management system
+buttons:
+  loginOut: Login out
+  systemSet: Open project config
+  reload: Reload
+  closeCurrentTab: Close current tab
+  closeLeftTabs: Close left tabs
+  closeRightTabs: Close right tabs
+  closeOtherTabs: Close other tabs
+  closeAllTabs: Close allT tabs
+  wholeFullScreen: Full screen
+  wholeExitFullScreen: Exit full
+  contentFullScreen: Content full screen
+  contentExitFullScreen: Content exit full screen
+  collapse: Click to collapse
+  expand: Click to expand
+menus:
+  home: Home
+  login: Login
+  guide: Guide
+  about: About
+status:
+  load: Loading...
+  noData: No data
+login:
+  username: Username
+  password: Password
+  verifyCode: Verify code
+  remember: Remember password
+  sure: Sure password
+  forget: Forget password?
+  login: Login
+  thirdLogin: Third login
+  phoneLogin: Phone login
+  qRCodeLogin: QRCode login
+  register: Register
+  weChatLogin: WeChat login
+  alipayLogin: Alipay login
+  qqLogin: QQ login
+  weiboLogin: Weibo login
+  phone: Phone
+  smsVerifyCode: SMS verify code
+  back: Back
+  test: Mock test
+  tip: After scanning the code, click "Confirm" to complete the login
+  definite: Definite
+  loginSuccess: Login success
+  registerSuccess: Regist success
+  tickPrivacy: Please tick privacy policy
+  readAccept: I have read it carefully and accept
+  privacyPolicy: Privacy policy
+  getVerifyCode: Get verify code
+  info: Seconds
+  usernameReg: Please enter username
+  passwordReg: Please enter password
+  verifyCodeReg: Please enter verify code
+  verifyCodeCorrectReg: Please enter correct verify code
+  verifyCodeSixReg: Please enter a 6-digit verify code
+  phoneReg: Please enter the phone
+  phoneCorrectReg: Please enter the correct phone number format
+  passwordRuleReg: The password format should be any combination of 8-18 digits
+  passwordSureReg: Please enter confirm password
+  passwordDifferentReg: The two passwords do not match
+  passwordUpdateReg: Password has been updated
+message:
+  moreOperations: This feature is not available, so stay tuned
+config:
+  projectConfig: Project configuration
+  closeConfig: Close configuration
+  theme: Theme
+  navigationBarMode: Navigation bar mode
+  leftMode: Left mode
+  topMode: Top mode
+  mixedMode: Mixed mode
+  themeColor: Theme color
+  interfaceDisplay: Interface display
+  on: on
+  off: off
+  grayMode: Gray mode
+  colorBlindMode: Color-blind mode
+  hideTab: Hide tab
+  sidebarLogo: Sidebar logo
+  tabPersistence: Tab persistence
+  tabStyle: Tab style
+  card: Card
+  dynamic: Dynamic
+  loginOut: Clear cache and return to login page
+search:
+  searchPlaceholder: Please enter keywords to search
+  confirm: Confirm
+  toggle: Toggle
+  close: Close
+notice:
+  notice: Notice
+  task: Task
+  completed: Completed
+guide:
+  title: Click on the button below to open the guide page for a better understanding of how to use this management system
+  button: Open guide page
+  last: Last
+  next: Next
+  done: Done
+  title1: navigation
+  intro1: Here is the navigation to the page you are currently visiting
+  title2: Search Tabs
+  intro2: Here you can search for the tabs you want to access
+  title3: Message notification
+  intro3: You can view the message sent by the administrator here
+  title4: Internationalization
+  intro4: You can switch languages here
+  title5: userinfo
+  intro5: You can view the user information here or click logout login
+  title6: Project configuration
+  intro6: You can view the project configuration here
+  title7: Menu
+  intro7: You can click here to jump to the corresponding page
+  title8: Collapse/expand the menu
+  intro8: You can click here to collapse/expand the menu
+  title9: Multiple tabs
+  intro9: Here is the history of the pages you have visited
