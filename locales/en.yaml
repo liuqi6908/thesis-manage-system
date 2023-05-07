@@ -18,14 +18,36 @@ buttons:
 menus:
   home: Home
   login: Login
+  systemManagement: System management
+  teacherManagement: Teacher management
+  studentManagement: Student management
+  classManagement: Class management
+  thesisManagement: Thesis management
+  evaluationResults: Evaluation results
+  dataStatistics: Data statistics
+  thesisStatistics: Thesis statistics
+  evaluationStatistics: Evaluation statistics
+  supervisedStudents: Supervised students
+  evaluationManagement: Evaluation management
+  pendingReview: Pending review
+  reviewed: Reviewed
+  thesisTopicSelection: Thesis topic selection
+  supervisedTeacher: Supervised teacher
+  submitThesis: Submit thesis
+  user: User center
+  userinfo: UserInfo
+  changePassword: Change password
+  schoolWebsite: School website
   guide: Guide
   about: About
 status:
   load: Loading...
   noData: No data
 login:
-  username: Username
+  userNo: User account
   password: Password
+  oldPassword: Old password
+  newPassword: New password
   verifyCode: Verify code
   remember: Remember password
   sure: Sure password
@@ -45,6 +67,7 @@ login:
   test: Mock test
   tip: After scanning the code, click "Confirm" to complete the login
   definite: Definite
+  reset: Reset
   loginSuccess: Login success
   registerSuccess: Regist success
   tickPrivacy: Please tick privacy policy
@@ -52,8 +75,10 @@ login:
   privacyPolicy: Privacy policy
   getVerifyCode: Get verify code
   info: Seconds
-  usernameReg: Please enter username
+  userNoReg: Please enter user account
   passwordReg: Please enter password
+  oldPasswordReg: Please enter old password
+  newPasswordReg: Please enter new password
   verifyCodeReg: Please enter verify code
   verifyCodeCorrectReg: Please enter correct verify code
   verifyCodeSixReg: Please enter a 6-digit verify code

@@ -1,14 +1,14 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+defineOptions({
+  name: "SupervisedTeacher"
+});
+</script>
 
 <template>
-  <div>首页</div>
+  <div>指导教师</div>
 </template>
 
 <style lang="scss" scoped>
-:deep(.el-timeline-item) {
-  margin: 6px 0 0 6px;
-}
-
 .main-content {
   margin: 20px 20px 0 !important;
 }

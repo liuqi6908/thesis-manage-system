@@ -24,6 +24,8 @@ export const noticesData: TabItem = {
       datetime: "2023-04-28",
       description: "",
       link: "https://computer.hdu.edu.cn/2023/0428/c6764a245386/page.htm",
+      extra: "未读",
+      status: "warning",
       type: "1"
     },
     {
@@ -33,6 +35,8 @@ export const noticesData: TabItem = {
       datetime: "2023-04-27",
       description: "",
       link: "https://computer.hdu.edu.cn/2023/0427/c6764a245245/page.htm",
+      extra: "未读",
+      status: "warning",
       type: "1"
     },
     {
@@ -42,6 +46,8 @@ export const noticesData: TabItem = {
       datetime: "2023-04-25",
       description: "",
       link: "https://computer.hdu.edu.cn/2023/0425/c6764a245077/page.htm",
+      extra: "未读",
+      status: "warning",
       type: "1"
     },
     {
@@ -51,6 +57,8 @@ export const noticesData: TabItem = {
       datetime: "2023-04-24",
       description: "",
       link: "https://computer.hdu.edu.cn/2023/0424/c6764a245033/page.htm",
+      extra: "未读",
+      status: "warning",
       type: "1"
     },
     {
@@ -60,6 +68,8 @@ export const noticesData: TabItem = {
       datetime: "2023-04-11",
       description: "",
       link: "https://computer.hdu.edu.cn/2023/0411/c6764a243797/page.htm",
+      extra: "未读",
+      status: "warning",
       type: "1"
     },
     {

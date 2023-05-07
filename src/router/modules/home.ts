@@ -1,24 +1,25 @@
 import { $t } from "@/plugins/i18n";
 import { home } from "@/router/enums";
-const Layout = () => import("@/layout/index.vue");
 
 export default {
   path: "/",
   name: "Home",
-  component: Layout,
+  component: () => import("@/layout/index.vue"),
   redirect: "/welcome",
   meta: {
-    icon: "homeFilled",
+    icon: "home",
     title: $t("menus.home"),
-    rank: home
+    rank: home,
+    keepAlive: true
   },
   children: [
     {
       path: "/welcome",
       name: "Welcome",
-      component: () => import("@/views/welcome/index.vue"),
+      component: () => import("@/views/common/welcome/index.vue"),
       meta: {
-        title: $t("menus.home")
+        title: $t("menus.home"),
+        keepAlive: true
       }
     }
   ]

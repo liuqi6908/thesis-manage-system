@@ -110,7 +110,7 @@ router.beforeEach((to: toRouteType, _from, next) => {
     to.matched.some(item => {
       if (!item.meta.title) return "";
       document.title = `${transformI18n(item.meta.title)} | ${transformI18n(
-        $t("title.title")
+        transformI18n($t("title.title"))
       )}`;
     });
   }

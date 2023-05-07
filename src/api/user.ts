@@ -2,7 +2,7 @@ import { http } from "@/utils/http";
 
 export type UserResult = {
   success: boolean;
-  message: string | undefined;
+  message?: string;
   data?: {
     /** 用户名 */
     username: string;
@@ -29,6 +29,18 @@ export type RefreshTokenResult = {
   };
 };
 
+export type UserInfoItem = {
+  label: string;
+  field: string;
+  teacherNo?: string;
+};
+
+export type UserInfo = {
+  success: boolean;
+  message?: string;
+  data?: Array<UserInfoItem>;
+};
+
 /** 登录 */
 export const getLogin = (data?: object) => {
   return http.request<UserResult>("post", "/login", { data });
@@ -37,4 +49,9 @@ export const getLogin = (data?: object) => {
 /** 刷新token */
 export const refreshTokenApi = (data?: object) => {
   return http.request<RefreshTokenResult>("post", "/refreshToken", { data });
+};
+
+/** 获取用户信息 */
+export const userinfo = (data?: object) => {
+  return http.request<UserInfo>("post", "/userinfo", { data });
 };

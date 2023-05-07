@@ -1,4 +1,5 @@
 import { RouteRecordName } from "vue-router";
+import type { DropdownInstance } from "element-plus";
 
 export type cacheType = {
   mode: string;
@@ -39,7 +40,9 @@ export type setType = {
 
 export type userType = {
   username?: string;
+  userNo?: string;
   roles?: Array<string>;
   verifyCode?: string;
   currentPage?: number;
+  notice?: DropdownInstance;
 };

@@ -7,15 +7,17 @@ export default {
   meta: {
     icon: "guide",
     title: $t("menus.guide"),
-    rank: guide
+    rank: guide,
+    keepAlive: true
   },
   children: [
     {
       path: "/guide/index",
       name: "Guide",
-      component: () => import("@/views/guide/index.vue"),
+      component: () => import("@/views/common/guide/index.vue"),
       meta: {
-        title: $t("menus.guide")
+        title: $t("menus.guide"),
+        keepAlive: true
       }
     }
   ]

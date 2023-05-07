@@ -5,17 +5,19 @@ export default {
   path: "/about",
   redirect: "/about/index",
   meta: {
-    icon: "informationLine",
+    icon: "information",
     title: $t("menus.about"),
-    rank: about
+    rank: about,
+    keepAlive: true
   },
   children: [
     {
       path: "/about/index",
       name: "About",
-      component: () => import("@/views/about/index.vue"),
+      component: () => import("@/views/common/about/index.vue"),
       meta: {
-        title: $t("menus.about")
+        title: $t("menus.about"),
+        keepAlive: true
       }
     }
   ]

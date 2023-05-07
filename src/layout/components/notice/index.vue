@@ -1,9 +1,11 @@
 <script setup lang="ts">
-import { ref, reactive } from "vue";
+import { ref, reactive, nextTick } from "vue";
 import { noticesData } from "./data";
 import NoticeList from "./noticeList.vue";
 import Bell from "@iconify-icons/ep/bell";
 import { useI18n } from "vue-i18n";
+import { useUserStore } from "@/store/modules/user";
+import type { DropdownInstance } from "element-plus";
 
 const { t } = useI18n();
 
@@ -12,26 +14,39 @@ const notices = reactive([
   {
     key: "1",
     name: "notice.notice",
+    count: 0,
     list: noticesData.notice
   },
   {
     key: "2",
     name: "notice.task",
+    count: noticesData.task.length,
     list: noticesData.task
   },
   {
     key: "3",
     name: "notice.completed",
+    count: 0,
     list: noticesData.completed
   }
 ]);
 const activeKey = ref(notices[0].key);
 
-notices.map(v => (noticesNum.value += v.list.length));
+notices[0].list.forEach(item => {
+  if (item.extra === "未读") notices[0].count++;
+});
+notices.map(v => (noticesNum.value += v.count));
+
+const notice = ref<DropdownInstance>();
+
+nextTick(() => {
+  const userStore = useUserStore();
+  userStore.SET_NOTICE(notice.value);
+});
 </script>
 
 <template>
-  <el-dropdown trigger="click" placement="bottom-end">
+  <el-dropdown trigger="click" placement="bottom-end" ref="notice">
     <span class="dropdown-badge navbar-bg-hover select-none">
       <el-badge :value="noticesNum" :max="99">
         <span class="header-notice-icon">
@@ -44,7 +59,9 @@ notices.map(v => (noticesNum.value += v.list.length));
         <el-tabs :stretch="true" v-model="activeKey" class="dropdown-tabs">
           <template v-for="item in notices" :key="item.key">
             <el-tab-pane
-              :label="`${t(item.name)}(${item.list.length})`"
+              :label="`${t(item.name)}${
+                item.count > 0 ? `(${item.count})` : ''
+              }`"
               :name="`${item.key}`"
             >
               <el-scrollbar max-height="330px">

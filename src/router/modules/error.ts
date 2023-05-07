@@ -6,31 +6,35 @@ export default {
   meta: {
     title: "",
     rank: error,
-    showLink: false
+    showLink: false,
+    keepAlive: true
   },
   children: [
     {
       path: "/error/403",
       name: "403",
-      component: () => import("@/views/error/403.vue"),
+      component: () => import("@/views/common/error/403.vue"),
       meta: {
-        title: ""
+        title: "",
+        keepAlive: true
       }
     },
     {
       path: "/error/404",
       name: "404",
-      component: () => import("@/views/error/404.vue"),
+      component: () => import("@/views/common/error/404.vue"),
       meta: {
-        title: ""
+        title: "",
+        keepAlive: true
       }
     },
     {
       path: "/error/500",
       name: "500",
-      component: () => import("@/views/error/500.vue"),
+      component: () => import("@/views/common/error/500.vue"),
       meta: {
-        title: ""
+        title: "",
+        keepAlive: true
       }
     }
   ]

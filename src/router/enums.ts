@@ -2,8 +2,33 @@
 // 规定只有 home 路由的 rank 才能为 0
 
 const home = 0,
-  guide = 10,
-  about = 11,
-  error = 12;
+  systemManagement = 1,
+  thesisManagement = 2,
+  dataStatistics = 3,
+  supervisedStudents = 4,
+  evaluationManagement = 5,
+  thesisTopicSelection = 6,
+  supervisedTeacher = 7,
+  submitThesis = 8,
+  user = 9,
+  schoolWebsite = 10,
+  guide = 11,
+  about = 12,
+  error = 13;
 
-export { home, guide, about, error };
+export {
+  home,
+  systemManagement,
+  thesisManagement,
+  dataStatistics,
+  supervisedStudents,
+  evaluationManagement,
+  thesisTopicSelection,
+  supervisedTeacher,
+  submitThesis,
+  user,
+  schoolWebsite,
+  guide,
+  about,
+  error
+};

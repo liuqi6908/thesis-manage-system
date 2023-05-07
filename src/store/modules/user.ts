@@ -8,6 +8,7 @@ import { getLogin, refreshTokenApi } from "@/api/user";
 import { UserResult, RefreshTokenResult } from "@/api/user";
 import { useMultiTagsStoreHook } from "@/store/modules/multiTags";
 import { type DataInfo, setToken, removeToken, sessionKey } from "@/utils/auth";
+import type { DropdownInstance } from "element-plus";
 
 export const useUserStore = defineStore({
   id: "pure-user",
@@ -15,17 +16,26 @@ export const useUserStore = defineStore({
     // 用户名
     username:
       storageSession().getItem<DataInfo<number>>(sessionKey)?.username ?? "",
+    // 账号
+    userNo:
+      storageSession().getItem<DataInfo<number>>(sessionKey)?.userNo ?? "",
     // 页面级别权限
     roles: storageSession().getItem<DataInfo<number>>(sessionKey)?.roles ?? [],
     // 前端生成的验证码（按实际需求替换）
     verifyCode: "",
     // 判断登录页面显示哪个组件（0：登录（默认）、1：手机登录、2：二维码登录、3：注册、4：忘记密码）
-    currentPage: 0
+    currentPage: 0,
+    // 通知组件
+    notice: null
   }),
   actions: {
     /** 存储用户名 */
     SET_USERNAME(username: string) {
       this.username = username;
+    },
+    /** 存储账号 */
+    SET_USER_NO(userNo: string) {
+      this.userNo = userNo;
     },
     /** 存储角色 */
     SET_ROLES(roles: Array<string>) {
@@ -40,7 +50,7 @@ export const useUserStore = defineStore({
       this.currentPage = value;
     },
     /** 登入 */
-    async loginByUsername(data) {
+    async loginByUserNo(data) {
       return new Promise<UserResult>((resolve, reject) => {
         getLogin(data)
           .then(data => {
@@ -52,7 +62,6 @@ export const useUserStore = defineStore({
             }
           })
           .catch(error => {
-            /*  */
             reject(error);
           });
       });
@@ -80,6 +89,10 @@ export const useUserStore = defineStore({
             reject(error);
           });
       });
+    },
+    /** 存储通知组件 */
+    SET_NOTICE(notice: DropdownInstance) {
+      this.notice = notice;
     }
   }
 });

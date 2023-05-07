@@ -61,13 +61,13 @@ const { getDropdownItemStyle, getDropdownItemClass } = useNav();
 const { locale, translationCh, translationEn } = useTranslationLang();
 
 const ruleForm = reactive({
-  username: "",
+  userNo: "",
   password: "",
   verifyCode: ""
 });
 
 interface form {
-  username: string;
+  userNo: string;
   password: string;
 }
 
@@ -75,7 +75,7 @@ interface form {
 function initLoginForm() {
   if (localStorage.getItem("loginForm")) {
     const form: form = JSON.parse(localStorage.getItem("loginForm"));
-    ruleForm.username = form.username;
+    ruleForm.userNo = form.userNo;
     ruleForm.password = form.password;
     checked.value = true;
   }
@@ -88,8 +88,8 @@ const onLogin = async (formEl: FormInstance | undefined) => {
   await formEl.validate((valid, fields) => {
     if (valid) {
       useUserStoreHook()
-        .loginByUsername({
-          username: ruleForm.username,
+        .loginByUserNo({
+          userNo: ruleForm.userNo,
           password: ruleForm.password
         })
         .then(res => {
@@ -99,7 +99,7 @@ const onLogin = async (formEl: FormInstance | undefined) => {
               localStorage.setItem(
                 "loginForm",
                 JSON.stringify({
-                  username: ruleForm.username,
+                  userNo: ruleForm.userNo,
                   password: ruleForm.password
                 })
               );
@@ -118,6 +118,7 @@ const onLogin = async (formEl: FormInstance | undefined) => {
             router.push("/");
           } else {
             message(res.message, {
+              grouping: true,
               type: "error"
             });
           }
@@ -235,16 +236,16 @@ watch(imgCode, value => {
                 :rules="[
                   {
                     required: true,
-                    message: transformI18n($t('login.usernameReg')),
+                    message: transformI18n($t('login.userNoReg')),
                     trigger: 'blur'
                   }
                 ]"
-                prop="username"
+                prop="userNo"
               >
                 <el-input
                   clearable
-                  v-model="ruleForm.username"
-                  :placeholder="t('login.username')"
+                  v-model="ruleForm.userNo"
+                  :placeholder="t('login.userNo')"
                   :prefix-icon="useRenderIcon(User)"
                 />
               </el-form-item>
