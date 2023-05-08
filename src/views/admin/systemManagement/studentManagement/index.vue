@@ -1,107 +1,141 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, reactive, ComputedRef, computed, watchEffect } from "vue";
 import tree from "./tree.vue";
-import { useUser } from "./hook";
+import { Info, useStudent } from "./hook";
 import { PureTableBar } from "@/components/RePureTableBar";
 import { useRenderIcon } from "@/components/ReIcon/src/hooks";
 
-import Role from "@iconify-icons/ri/admin-line";
-import Password from "@iconify-icons/ri/lock-password-line";
-import More from "@iconify-icons/ep/more-filled";
 import Delete from "@iconify-icons/ep/delete";
 import EditPen from "@iconify-icons/ep/edit-pen";
-import Search from "@iconify-icons/ep/search";
 import Refresh from "@iconify-icons/ep/refresh";
 import AddFill from "@iconify-icons/ri/add-circle-line";
 
 defineOptions({
-  name: "User"
+  name: "StudentManagement"
 });
 
 const formRef = ref();
 const {
-  form,
   loading,
+  loadingConfig,
   columns,
   dataList,
   pagination,
-  buttonClass,
   onSearch,
-  resetForm,
   handleUpdate,
   handleDelete,
   handleSizeChange,
-  handleCurrentChange,
-  handleSelectionChange
-} = useUser();
+  handleCurrentChange
+} = useStudent();
+
+const form = reactive({
+  username: "",
+  userNo: "",
+  status: null
+});
+
+const resetForm = formEl => {
+  if (!formEl) return;
+  formEl.resetFields();
+};
+
+/** 过滤列表 */
+const filterList: ComputedRef<Info[]> = computed(() => {
+  if (dataList.value)
+    return dataList.value
+      .filter(item => {
+        if (item.username)
+          return item.username.toString().toLowerCase().includes(form.username);
+        else return false;
+      })
+      .filter(item => {
+        if (item.userNo)
+          return item.userNo.toString().toLowerCase().includes(form.userNo);
+        else return false;
+      })
+      .filter(item => {
+        if (form.status === 0 || form.status === 1)
+          return item.status === form.status;
+        else return true;
+      });
+  else return [];
+});
+
+// 添加一个观察器，监视 filteredList 属性的变化
+watchEffect(() => {
+  pagination.total = filterList.value.length;
+});
 </script>
 
 <template>
   <div class="main">
-    <tree class="w-[17%] float-left" />
-    <div class="float-right w-[81%]">
+    <tree class="w-[17%] h-full min-w-[150px]" />
+    <div class="flex-1 h-full overflow-auto ml-[15px]">
       <el-form
         ref="formRef"
         :inline="true"
         :model="form"
         class="bg-bg_color w-[99/100] pl-8 pt-4"
       >
-        <el-form-item label="用户名称：" prop="username">
+        <el-form-item label="姓名：" prop="username">
           <el-input
             v-model="form.username"
-            placeholder="请输入用户名称"
+            placeholder="请输入姓名"
             clearable
-            class="!w-[160px]"
+            class="!w-[200px]"
           />
         </el-form-item>
-        <el-form-item label="手机号码：" prop="mobile">
+        <el-form-item label="学号：" prop="userNo">
           <el-input
-            v-model="form.mobile"
-            placeholder="请输入手机号码"
+            v-model="form.userNo"
+            placeholder="请输入学号"
             clearable
-            class="!w-[160px]"
+            class="!w-[200px]"
           />
         </el-form-item>
         <el-form-item label="状态：" prop="status">
           <el-select
             v-model="form.status"
-            placeholder="请选择"
+            placeholder="请选择状态"
             clearable
-            class="!w-[160px]"
+            class="!w-[180px]"
           >
-            <el-option label="已开启" value="1" />
-            <el-option label="已关闭" value="0" />
+            <el-option label="启用" :value="1" />
+            <el-option label="禁用" :value="0" />
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button
-            type="primary"
-            :icon="useRenderIcon(Search)"
-            :loading="loading"
-            @click="onSearch"
-          >
-            搜索
-          </el-button>
           <el-button :icon="useRenderIcon(Refresh)" @click="resetForm(formRef)">
             重置
           </el-button>
         </el-form-item>
       </el-form>
 
-      <PureTableBar title="用户管理" @refresh="onSearch">
+      <PureTableBar
+        title="学生列表"
+        @refresh="onSearch"
+        class="overflow-hidden"
+      >
         <template #buttons>
           <el-button type="primary" :icon="useRenderIcon(AddFill)">
-            新增用户
+            新增学生
           </el-button>
         </template>
         <template v-slot="{ size, checkList }">
           <pure-table
             border
             align-whole="center"
-            table-layout="auto"
+            showOverflowTooltip
             :loading="loading"
+            :loading-config="loadingConfig"
             :size="size"
-            :data="dataList"
+            :height="size === 'small' ? 360 : 500"
+            :data="
+              filterList.slice(
+                (pagination.currentPage - 1) * pagination.pageSize,
+                pagination.currentPage * pagination.pageSize
+              )
+            "
             :columns="columns"
             :checkList="checkList"
             :pagination="pagination"
@@ -110,7 +144,6 @@ const {
               background: 'var(--el-table-row-hover-bg-color)',
               color: 'var(--el-text-color-primary)'
             }"
-            @selection-change="handleSelectionChange"
             @page-size-change="handleSizeChange"
             @page-current-change="handleCurrentChange"
           >
@@ -120,61 +153,24 @@ const {
                 link
                 type="primary"
                 :size="size"
-                @click="handleUpdate(row)"
                 :icon="useRenderIcon(EditPen)"
+                @click="handleUpdate(row)"
               >
                 修改
               </el-button>
-              <el-popconfirm title="是否确认删除?">
+              <el-popconfirm title="是否确认删除?" @confirm="handleDelete(row)">
                 <template #reference>
                   <el-button
                     class="reset-margin"
                     link
-                    type="primary"
+                    type="danger"
                     :size="size"
                     :icon="useRenderIcon(Delete)"
-                    @click="handleDelete(row)"
                   >
                     删除
                   </el-button>
                 </template>
               </el-popconfirm>
-              <el-dropdown>
-                <el-button
-                  class="ml-3 mt-[2px]"
-                  link
-                  type="primary"
-                  :size="size"
-                  @click="handleUpdate(row)"
-                  :icon="useRenderIcon(More)"
-                />
-                <template #dropdown>
-                  <el-dropdown-menu>
-                    <el-dropdown-item>
-                      <el-button
-                        :class="buttonClass"
-                        link
-                        type="primary"
-                        :size="size"
-                        :icon="useRenderIcon(Password)"
-                      >
-                        重置密码
-                      </el-button>
-                    </el-dropdown-item>
-                    <el-dropdown-item>
-                      <el-button
-                        :class="buttonClass"
-                        link
-                        type="primary"
-                        :size="size"
-                        :icon="useRenderIcon(Role)"
-                      >
-                        分配角色
-                      </el-button>
-                    </el-dropdown-item>
-                  </el-dropdown-menu>
-                </template>
-              </el-dropdown>
             </template>
           </pure-table>
         </template>
@@ -186,5 +182,20 @@ const {
 <style scoped lang="scss">
 :deep(.el-dropdown-menu__item i) {
   margin: 0;
+}
+
+.main {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 !important;
+  padding: 24px 24px 10px;
+
+  :deep(.el-pagination) {
+    overflow-x: auto;
+  }
 }
 </style>

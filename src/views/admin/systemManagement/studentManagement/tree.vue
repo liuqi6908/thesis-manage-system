@@ -87,7 +87,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="bg-bg_color max-h-[700px] min-h-[500px] flex flex-col">
+  <div class="bg-bg_color flex flex-col">
     <div class="flex items-center h-[34px]">
       <p class="flex-1 ml-2 font-bold text-base truncate" title="部门列表">
         班级列表
@@ -149,6 +149,7 @@ onMounted(async () => {
       :data="treeData"
       node-key="id"
       size="small"
+      :indent="10"
       :props="defaultProps"
       default-expand-all
       :expand-on-click-node="false"
@@ -158,7 +159,6 @@ onMounted(async () => {
       <template #default="{ node, data }">
         <span
           :class="[
-            'pl-1',
             'pr-1',
             'rounded',
             'flex',
@@ -166,7 +166,7 @@ onMounted(async () => {
             'select-none',
             searchValue.trim().length > 0 &&
               node.label.includes(searchValue) &&
-              'text-red-500',
+              'text-blue-500',
             highlightMap[node.id]?.highlight ? 'dark:text-primary' : ''
           ]"
           :style="{

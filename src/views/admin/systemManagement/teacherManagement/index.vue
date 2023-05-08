@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, reactive, ComputedRef, computed, watchEffect } from "vue";
-import { Info, useRole } from "./hook";
+import { Info, useTeacher } from "./hook";
 import { PureTableBar } from "@/components/RePureTableBar";
 import { useRenderIcon } from "@/components/ReIcon/src/hooks";
 
@@ -25,7 +25,7 @@ const {
   handleDelete,
   handleSizeChange,
   handleCurrentChange
-} = useRole();
+} = useTeacher();
 
 const form = reactive({
   username: "",
@@ -42,12 +42,16 @@ const resetForm = formEl => {
 const filterList: ComputedRef<Info[]> = computed(() => {
   if (dataList.value)
     return dataList.value
-      .filter(item =>
-        item.username.toString().toLowerCase().includes(form.username)
-      )
-      .filter(item =>
-        item.userNo.toString().toLowerCase().includes(form.userNo)
-      )
+      .filter(item => {
+        if (item.username)
+          return item.username.toString().toLowerCase().includes(form.username);
+        else return false;
+      })
+      .filter(item => {
+        if (item.userNo)
+          return item.userNo.toString().toLowerCase().includes(form.userNo);
+        else return false;
+      })
       .filter(item => {
         if (form.status === 0 || form.status === 1)
           return item.status === form.status;
@@ -81,7 +85,7 @@ watchEffect(() => {
       <el-form-item label="职工号：" prop="userNo">
         <el-input
           v-model="form.userNo"
-          placeholder="请输入职工号："
+          placeholder="请输入职工号"
           clearable
           class="!w-[200px]"
         />
@@ -104,7 +108,7 @@ watchEffect(() => {
       </el-form-item>
     </el-form>
 
-    <PureTableBar title="教师列表" @refresh="onSearch">
+    <PureTableBar title="教师列表" @refresh="onSearch" class="overflow-hidden">
       <template #buttons>
         <el-button type="primary" :icon="useRenderIcon(AddFill)">
           新增教师
@@ -118,7 +122,7 @@ watchEffect(() => {
           :loading="loading"
           :loading-config="loadingConfig"
           :size="size"
-          :height="size === 'small' ? 352 : 440"
+          :height="size === 'small' ? 360 : 500"
           :data="
             filterList.slice(
               (pagination.currentPage - 1) * pagination.pageSize,
@@ -147,7 +151,7 @@ watchEffect(() => {
             >
               修改
             </el-button>
-            <el-popconfirm title="是否确认删除?">
+            <el-popconfirm title="是否确认删除?" @confirm="handleDelete(row)">
               <template #reference>
                 <el-button
                   class="reset-margin"
@@ -155,7 +159,6 @@ watchEffect(() => {
                   type="danger"
                   :size="size"
                   :icon="useRenderIcon(Delete)"
-                  @click="handleDelete(row)"
                 >
                   删除
                 </el-button>

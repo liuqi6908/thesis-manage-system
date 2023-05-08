@@ -1,50 +1,25 @@
 import dayjs from "dayjs";
 import { message } from "@/utils/message";
-import { studentList } from "@/api/system";
+import { handleTree } from "@/utils/tree";
+import { classList } from "@/api/system";
 import { ElMessageBox } from "element-plus";
-import { type PaginationProps, LoadingConfig } from "@pureadmin/table";
-import { reactive, ref, onMounted } from "vue";
-import { delay } from "@pureadmin/utils";
+import { ref, onMounted } from "vue";
 
 export interface Info {
   id?: number;
-  username?: string;
-  userNo?: string;
-  gender?: string;
-  college?: string;
-  major?: string;
-  class?: string;
-  phone?: string;
-  email?: string;
+  name?: string;
+  type?: number;
+  parentId?: number;
   status?: number;
   createTime?: number;
+  desc?: string;
 }
 
-export function useStudent() {
+export function useClass() {
   const dataList = ref<Info[]>();
   const loading = ref(true);
-  const loadingConfig = reactive<LoadingConfig>({
-    text: "正在加载第1页...",
-    viewBox: "-10, -10, 50, 50",
-    spinner: `
-        <path class="path" d="
-          M 30 15
-          L 28 17
-          M 25.61 25.61
-          A 15 15, 0, 0, 1, 15 30
-          A 15 15, 0, 1, 1, 27.99 7.5
-          L 15 15
-        " style="stroke-width: 4px; fill: rgba(0, 0, 0, 0)"/>
-      `
-  });
 
   const switchLoadMap = ref({});
-  const pagination = reactive<PaginationProps>({
-    total: 0,
-    pageSize: 10,
-    currentPage: 1,
-    background: true
-  });
   const columns: TableColumnList = [
     {
       type: "selection",
@@ -55,48 +30,20 @@ export function useStudent() {
     {
       label: "序号",
       type: "index",
-      width: 70,
+      minWidth: 70,
       hide: ({ checkList }) => !checkList.includes("序号列")
     },
     {
-      label: "姓名",
-      prop: "username",
-      minWidth: 100
-    },
-    {
-      label: "学号",
-      prop: "userNo",
-      minWidth: 100
-    },
-    {
-      label: "性别",
-      prop: "gender",
-      minWidth: 70
-    },
-    {
-      label: "学院",
-      prop: "college",
+      label: "部门",
+      prop: "name",
+      align: "left",
       minWidth: 150
     },
     {
-      label: "专业",
-      prop: "major",
-      minWidth: 150
-    },
-    {
-      label: "班级",
-      prop: "class",
-      minWidth: 100
-    },
-    {
-      label: "手机号",
-      prop: "phone",
-      minWidth: 120
-    },
-    {
-      label: "电子邮箱",
-      prop: "email",
-      minWidth: 120
+      label: "类型",
+      minWidth: 70,
+      prop: "type",
+      formatter: ({ type }) => ["学院", "专业", "班级"][type - 1]
     },
     {
       label: "状态",
@@ -111,16 +58,22 @@ export function useStudent() {
           active-text="启用"
           inactive-text="禁用"
           inline-prompt
+          disabled={scope.row.type !== 3}
           onChange={() => onChange(scope as any)}
         />
       )
     },
     {
       label: "创建时间",
-      minWidth: 160,
+      minWidth: 150,
       prop: "createTime",
       formatter: ({ createTime }) =>
         dayjs(createTime).format("YYYY-MM-DD HH:mm:ss")
+    },
+    {
+      label: "备注",
+      prop: "desc",
+      minWidth: 150
     },
     {
       label: "操作",
@@ -134,9 +87,9 @@ export function useStudent() {
     ElMessageBox.confirm(
       `确认要 <strong>${
         row.status === 0 ? "禁用" : "启用"
-      }</strong><strong style='color:var(--el-color-primary)'>${
-        row.username
-      }</strong> 学生账号吗?`,
+      }</strong> <strong style='color:var(--el-color-primary)'>${
+        row.name
+      }</strong> 班级吗?`,
       "系统提示",
       {
         confirmButtonText: "确定",
@@ -162,7 +115,7 @@ export function useStudent() {
               loading: false
             }
           );
-          message("已成功修改账号状态", {
+          message("已成功修改班级状态", {
             type: "success"
           });
         }, 300);
@@ -180,25 +133,12 @@ export function useStudent() {
     console.log(row);
   }
 
-  function handleSizeChange(val: number) {
-    console.log(`${val} items per page`);
-  }
-
-  function handleCurrentChange(val: number) {
-    loadingConfig.text = `正在加载第${val}页...`;
-    loading.value = true;
-    delay(500).then(() => {
-      loading.value = false;
-    });
-  }
-
   async function onSearch() {
     loading.value = true;
-    await studentList()
+    await classList()
       .then(res => {
         if (res.success) {
-          dataList.value = res.data;
-          pagination.total = res.data.length;
+          dataList.value = handleTree(res.data);
         } else {
           message(res.message, {
             type: "error"
@@ -218,14 +158,10 @@ export function useStudent() {
 
   return {
     loading,
-    loadingConfig,
     columns,
     dataList,
-    pagination,
     onSearch,
     handleUpdate,
-    handleDelete,
-    handleSizeChange,
-    handleCurrentChange
+    handleDelete
   };
 }

@@ -19,11 +19,11 @@ export interface Info {
   createTime?: number;
 }
 
-export function useRole() {
+export function useTeacher() {
   const dataList = ref<Info[]>();
   const loading = ref(true);
   const loadingConfig = reactive<LoadingConfig>({
-    text: "正在加载第一页...",
+    text: "正在加载第1页...",
     viewBox: "-10, -10, 50, 50",
     spinner: `
         <path class="path" d="
