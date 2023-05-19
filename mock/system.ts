@@ -1,5 +1,602 @@
 import { MockMethod } from "vite-plugin-mock";
 
+const classList = [
+  {
+    id: 1,
+    name: "计算机学院",
+    type: 1,
+    parentId: 0,
+    status: 1,
+    createTime: 1609840000000,
+    desc: "无"
+  },
+  {
+    id: 11,
+    name: "计算机科学与技术",
+    type: 2,
+    parentId: 1,
+    status: 1,
+    createTime: 1609840000000,
+    desc: "无"
+  },
+  {
+    id: 101,
+    name: "19052311",
+    type: 3,
+    parentId: 11,
+    status: 1,
+    createTime: 1609840000000,
+    desc: "无"
+  },
+  {
+    id: 102,
+    name: "19052312",
+    type: 3,
+    parentId: 11,
+    status: 1,
+    createTime: 1609840000000,
+    desc: "无"
+  },
+  {
+    id: 103,
+    name: "19052313",
+    type: 3,
+    parentId: 11,
+    status: 1,
+    createTime: 1609840000000,
+    desc: "无"
+  },
+  {
+    id: 104,
+    name: "19052314",
+    type: 3,
+    parentId: 11,
+    status: 1,
+    createTime: 1609840000000,
+    desc: "无"
+  },
+  {
+    id: 105,
+    name: "19052315",
+    type: 3,
+    parentId: 11,
+    status: 1,
+    createTime: 1609840000000,
+    desc: "无"
+  },
+  {
+    id: 106,
+    name: "19052316",
+    type: 3,
+    parentId: 11,
+    status: 1,
+    createTime: 1609840000000,
+    desc: "无"
+  },
+  {
+    id: 107,
+    name: "19052317",
+    type: 3,
+    parentId: 11,
+    status: 1,
+    createTime: 1609840000000,
+    desc: "无"
+  },
+  {
+    id: 108,
+    name: "19052318",
+    type: 3,
+    parentId: 11,
+    status: 1,
+    createTime: 1609840000000,
+    desc: "无"
+  },
+  {
+    id: 109,
+    name: "19052319",
+    type: 3,
+    parentId: 11,
+    status: 1,
+    createTime: 1609840000000,
+    desc: "无"
+  },
+  {
+    id: 110,
+    name: "19052320",
+    type: 3,
+    parentId: 11,
+    status: 1,
+    createTime: 1609840000000,
+    desc: "无"
+  },
+  {
+    id: 111,
+    name: "19052321",
+    type: 3,
+    parentId: 11,
+    status: 1,
+    createTime: 1609840000000,
+    desc: "无"
+  },
+  {
+    id: 112,
+    name: "19052322",
+    type: 3,
+    parentId: 11,
+    status: 1,
+    createTime: 1609840000000,
+    desc: "无"
+  },
+  {
+    id: 113,
+    name: "19052323",
+    type: 3,
+    parentId: 11,
+    status: 1,
+    createTime: 1609840000000,
+    desc: "无"
+  },
+  {
+    id: 114,
+    name: "19052324",
+    type: 3,
+    parentId: 11,
+    status: 0,
+    createTime: 1609840000000,
+    desc: "无"
+  },
+  {
+    id: 115,
+    name: "19052325",
+    type: 3,
+    parentId: 11,
+    status: 0,
+    createTime: 1609840000000,
+    desc: "无"
+  },
+  {
+    id: 12,
+    name: "软件工程",
+    type: 2,
+    parentId: 1,
+    status: 1,
+    createTime: 1609840000000,
+    desc: "无"
+  },
+  {
+    id: 201,
+    name: "19052711",
+    type: 3,
+    parentId: 12,
+    status: 1,
+    createTime: 1609840000000,
+    desc: "无"
+  },
+  {
+    id: 202,
+    name: "19052712",
+    type: 3,
+    parentId: 12,
+    status: 1,
+    createTime: 1609840000000,
+    desc: "无"
+  },
+  {
+    id: 203,
+    name: "19052713",
+    type: 3,
+    parentId: 12,
+    status: 1,
+    createTime: 1609840000000,
+    desc: "无"
+  },
+  {
+    id: 204,
+    name: "19052714",
+    type: 3,
+    parentId: 12,
+    status: 1,
+    createTime: 1609840000000,
+    desc: "无"
+  },
+  {
+    id: 205,
+    name: "19052715",
+    type: 3,
+    parentId: 12,
+    status: 1,
+    createTime: 1609840000000,
+    desc: "无"
+  },
+  {
+    id: 206,
+    name: "19052716",
+    type: 3,
+    parentId: 12,
+    status: 1,
+    createTime: 1609840000000,
+    desc: "无"
+  },
+  {
+    id: 207,
+    name: "19052717",
+    type: 3,
+    parentId: 12,
+    status: 1,
+    createTime: 1609840000000,
+    desc: "无"
+  },
+  {
+    id: 208,
+    name: "19052718",
+    type: 3,
+    parentId: 12,
+    status: 1,
+    createTime: 1609840000000,
+    desc: "无"
+  },
+  {
+    id: 209,
+    name: "19052719",
+    type: 3,
+    parentId: 12,
+    status: 0,
+    createTime: 1609840000000,
+    desc: "无"
+  },
+  {
+    id: 210,
+    name: "19052720",
+    type: 3,
+    parentId: 12,
+    status: 0,
+    createTime: 1609840000000,
+    desc: "无"
+  },
+  {
+    id: 2,
+    name: "机械工学院",
+    type: 1,
+    parentId: 0,
+    status: 1,
+    createTime: 1609840000000,
+    desc: "无"
+  },
+  {
+    id: 13,
+    name: "机械设计制造及其自动化",
+    type: 2,
+    parentId: 2,
+    status: 1,
+    createTime: 1609840000000,
+    desc: "无"
+  },
+  {
+    id: 301,
+    name: "19042301",
+    type: 3,
+    parentId: 13,
+    status: 1,
+    createTime: 1609840000000,
+    desc: "无"
+  },
+  {
+    id: 302,
+    name: "19042302",
+    type: 3,
+    parentId: 13,
+    status: 1,
+    createTime: 1609840000000,
+    desc: "无"
+  },
+  {
+    id: 303,
+    name: "19042303",
+    type: 3,
+    parentId: 13,
+    status: 1,
+    createTime: 1609840000000,
+    desc: "无"
+  },
+  {
+    id: 304,
+    name: "19042304",
+    type: 3,
+    parentId: 13,
+    status: 1,
+    createTime: 1609840000000,
+    desc: "无"
+  },
+  {
+    id: 305,
+    name: "19042305",
+    type: 3,
+    parentId: 13,
+    status: 1,
+    createTime: 1609840000000,
+    desc: "无"
+  },
+  {
+    id: 14,
+    name: "车辆工程",
+    type: 2,
+    parentId: 2,
+    status: 1,
+    createTime: 1609840000000,
+    desc: "无"
+  },
+  {
+    id: 401,
+    name: "19042701",
+    type: 3,
+    parentId: 14,
+    status: 1,
+    createTime: 1609840000000,
+    desc: "无"
+  },
+  {
+    id: 402,
+    name: "19042702",
+    type: 3,
+    parentId: 14,
+    status: 1,
+    createTime: 1609840000000,
+    desc: "无"
+  },
+  {
+    id: 403,
+    name: "19042703",
+    type: 3,
+    parentId: 14,
+    status: 1,
+    createTime: 1609840000000,
+    desc: "无"
+  },
+  {
+    id: 404,
+    name: "19042704",
+    type: 3,
+    parentId: 14,
+    status: 1,
+    createTime: 1609840000000,
+    desc: "无"
+  },
+  {
+    id: 405,
+    name: "19042705",
+    type: 3,
+    parentId: 14,
+    status: 1,
+    createTime: 1609840000000,
+    desc: "无"
+  },
+  {
+    id: 15,
+    name: "智能制造工程",
+    type: 2,
+    parentId: 2,
+    status: 1,
+    createTime: 1609840000000,
+    desc: "无"
+  },
+  {
+    id: 501,
+    name: "19043101",
+    type: 3,
+    parentId: 15,
+    status: 1,
+    createTime: 1609840000000,
+    desc: "无"
+  },
+  {
+    id: 502,
+    name: "19043102",
+    type: 3,
+    parentId: 15,
+    status: 1,
+    createTime: 1609840000000,
+    desc: "无"
+  },
+  {
+    id: 503,
+    name: "19043103",
+    type: 3,
+    parentId: 15,
+    status: 1,
+    createTime: 1609840000000,
+    desc: "无"
+  },
+  {
+    id: 504,
+    name: "19043104",
+    type: 3,
+    parentId: 15,
+    status: 1,
+    createTime: 1609840000000,
+    desc: "无"
+  },
+  {
+    id: 505,
+    name: "19043105",
+    type: 3,
+    parentId: 15,
+    status: 1,
+    createTime: 1609840000000,
+    desc: "无"
+  },
+  {
+    id: 3,
+    name: "自动化学院",
+    type: 1,
+    parentId: 0,
+    status: 1,
+    createTime: 1609840000000,
+    desc: "无"
+  },
+  {
+    id: 16,
+    name: "自动化",
+    type: 2,
+    parentId: 3,
+    status: 1,
+    createTime: 1609840000000,
+    desc: "无"
+  },
+  {
+    id: 601,
+    name: "19032301",
+    type: 3,
+    parentId: 16,
+    status: 1,
+    createTime: 1609840000000,
+    desc: "无"
+  },
+  {
+    id: 602,
+    name: "19032302",
+    type: 3,
+    parentId: 16,
+    status: 1,
+    createTime: 1609840000000,
+    desc: "无"
+  },
+  {
+    id: 603,
+    name: "19032303",
+    type: 3,
+    parentId: 16,
+    status: 1,
+    createTime: 1609840000000,
+    desc: "无"
+  },
+  {
+    id: 604,
+    name: "19032304",
+    type: 3,
+    parentId: 16,
+    status: 1,
+    createTime: 1609840000000,
+    desc: "无"
+  },
+  {
+    id: 605,
+    name: "19032305",
+    type: 3,
+    parentId: 16,
+    status: 1,
+    createTime: 1609840000000,
+    desc: "无"
+  },
+  {
+    id: 17,
+    name: "电气工程及其自动化",
+    type: 2,
+    parentId: 3,
+    status: 1,
+    createTime: 1609840000000,
+    desc: "无"
+  },
+  {
+    id: 701,
+    name: "19032701",
+    type: 3,
+    parentId: 17,
+    status: 1,
+    createTime: 1609840000000,
+    desc: "无"
+  },
+  {
+    id: 702,
+    name: "19032702",
+    type: 3,
+    parentId: 17,
+    status: 1,
+    createTime: 1609840000000,
+    desc: "无"
+  },
+  {
+    id: 703,
+    name: "19032703",
+    type: 3,
+    parentId: 17,
+    status: 1,
+    createTime: 1609840000000,
+    desc: "无"
+  },
+  {
+    id: 704,
+    name: "19032704",
+    type: 3,
+    parentId: 17,
+    status: 1,
+    createTime: 1609840000000,
+    desc: "无"
+  },
+  {
+    id: 705,
+    name: "19032705",
+    type: 3,
+    parentId: 17,
+    status: 1,
+    createTime: 1609840000000,
+    desc: "无"
+  },
+  {
+    id: 18,
+    name: "智能科学与技术",
+    type: 2,
+    parentId: 3,
+    status: 1,
+    createTime: 1609840000000,
+    desc: "无"
+  },
+  {
+    id: 801,
+    name: "19033101",
+    type: 3,
+    parentId: 18,
+    status: 1,
+    createTime: 1609840000000,
+    desc: "无"
+  },
+  {
+    id: 802,
+    name: "19033102",
+    type: 3,
+    parentId: 18,
+    status: 1,
+    createTime: 1609840000000,
+    desc: "无"
+  },
+  {
+    id: 803,
+    name: "19033103",
+    type: 3,
+    parentId: 18,
+    status: 1,
+    createTime: 1609840000000,
+    desc: "无"
+  },
+  {
+    id: 804,
+    name: "19033104",
+    type: 3,
+    parentId: 18,
+    status: 1,
+    createTime: 1609840000000,
+    desc: "无"
+  },
+  {
+    id: 805,
+    name: "19033105",
+    type: 3,
+    parentId: 18,
+    status: 1,
+    createTime: 1609840000000,
+    desc: "无"
+  }
+];
+
 export default [
   {
     url: "/teacherList",
@@ -3356,291 +3953,16 @@ export default [
   {
     url: "/classList",
     method: "post",
-    response: () => {
+    response: ({ body }) => {
+      const arr = classList.filter(item => {
+        if (body.type && body.id)
+          return item.type === body.type && item.parentId === body.id;
+        else if (body.type) return item.type === body.type;
+        else return true;
+      });
       return {
         success: true,
-        data: [
-          {
-            id: 1,
-            name: "计算机学院",
-            type: 1,
-            parentId: 0,
-
-            status: 1,
-            createTime: 1609840000000,
-            desc: "无"
-          },
-          {
-            id: 11,
-            name: "计算机科学与技术",
-            type: 2,
-            parentId: 1,
-
-            status: 1,
-            createTime: 1609840000000,
-            desc: "无"
-          },
-          {
-            id: 101,
-            name: "19052311",
-            type: 3,
-            parentId: 11,
-
-            status: 1,
-            createTime: 1609840000000,
-            desc: "无"
-          },
-          {
-            id: 102,
-            name: "19052312",
-            type: 3,
-            parentId: 11,
-
-            status: 1,
-            createTime: 1609840000000,
-            desc: "无"
-          },
-          {
-            id: 103,
-            name: "19052313",
-            type: 3,
-            parentId: 11,
-
-            status: 1,
-            createTime: 1609840000000,
-            desc: "无"
-          },
-          {
-            id: 104,
-            name: "19052314",
-            type: 3,
-            parentId: 11,
-
-            status: 1,
-            createTime: 1609840000000,
-            desc: "无"
-          },
-          {
-            id: 105,
-            name: "19052315",
-            type: 3,
-            parentId: 11,
-
-            status: 1,
-            createTime: 1609840000000,
-            desc: "无"
-          },
-          {
-            id: 106,
-            name: "19052316",
-            type: 3,
-            parentId: 11,
-
-            status: 1,
-            createTime: 1609840000000,
-            desc: "无"
-          },
-          {
-            id: 107,
-            name: "19052317",
-            type: 3,
-            parentId: 11,
-
-            status: 1,
-            createTime: 1609840000000,
-            desc: "无"
-          },
-          {
-            id: 108,
-            name: "19052318",
-            type: 3,
-            parentId: 11,
-
-            status: 1,
-            createTime: 1609840000000,
-            desc: "无"
-          },
-          {
-            id: 109,
-            name: "19052319",
-            type: 3,
-            parentId: 11,
-
-            status: 1,
-            createTime: 1609840000000,
-            desc: "无"
-          },
-          {
-            id: 110,
-            name: "19052320",
-            type: 3,
-            parentId: 11,
-
-            status: 1,
-            createTime: 1609840000000,
-            desc: "无"
-          },
-          {
-            id: 111,
-            name: "19052321",
-            type: 3,
-            parentId: 11,
-
-            status: 1,
-            createTime: 1609840000000,
-            desc: "无"
-          },
-          {
-            id: 112,
-            name: "19052322",
-            type: 3,
-            parentId: 11,
-
-            status: 1,
-            createTime: 1609840000000,
-            desc: "无"
-          },
-          {
-            id: 113,
-            name: "19052323",
-            type: 3,
-            parentId: 11,
-
-            status: 1,
-            createTime: 1609840000000,
-            desc: "无"
-          },
-          {
-            id: 114,
-            name: "19052324",
-            type: 3,
-            parentId: 11,
-
-            status: 0,
-            createTime: 1609840000000,
-            desc: "无"
-          },
-          {
-            id: 115,
-            name: "19052325",
-            type: 3,
-            parentId: 11,
-
-            status: 0,
-            createTime: 1609840000000,
-            desc: "无"
-          },
-          {
-            id: 12,
-            name: "软件工程",
-            type: 2,
-            parentId: 1,
-
-            status: 1,
-            createTime: 1609840000000,
-            desc: "无"
-          },
-          {
-            id: 201,
-            name: "19052711",
-            type: 3,
-            parentId: 12,
-
-            status: 1,
-            createTime: 1609840000000,
-            desc: "无"
-          },
-          {
-            id: 202,
-            name: "19052712",
-            type: 3,
-            parentId: 12,
-
-            status: 1,
-            createTime: 1609840000000,
-            desc: "无"
-          },
-          {
-            id: 203,
-            name: "19052713",
-            type: 3,
-            parentId: 12,
-
-            status: 1,
-            createTime: 1609840000000,
-            desc: "无"
-          },
-          {
-            id: 204,
-            name: "19052714",
-            type: 3,
-            parentId: 12,
-
-            status: 1,
-            createTime: 1609840000000,
-            desc: "无"
-          },
-          {
-            id: 205,
-            name: "19052715",
-            type: 3,
-            parentId: 12,
-
-            status: 1,
-            createTime: 1609840000000,
-            desc: "无"
-          },
-          {
-            id: 206,
-            name: "19052716",
-            type: 3,
-            parentId: 12,
-
-            status: 1,
-            createTime: 1609840000000,
-            desc: "无"
-          },
-          {
-            id: 207,
-            name: "19052717",
-            type: 3,
-            parentId: 12,
-
-            status: 1,
-            createTime: 1609840000000,
-            desc: "无"
-          },
-          {
-            id: 208,
-            name: "19052718",
-            type: 3,
-            parentId: 12,
-
-            status: 1,
-            createTime: 1609840000000,
-            desc: "无"
-          },
-          {
-            id: 209,
-            name: "19052719",
-            type: 3,
-            parentId: 12,
-
-            status: 0,
-            createTime: 1609840000000,
-            desc: "无"
-          },
-          {
-            id: 210,
-            name: "19052720",
-            type: 3,
-            parentId: 12,
-
-            status: 0,
-            createTime: 1609840000000,
-            desc: "无"
-          }
-        ]
+        data: arr
       };
     }
   }

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { handleTree } from "@/utils/tree";
-import { classList } from "@/api/system";
+import { classList } from "@/api/admin";
 import { useRenderIcon } from "@/components/ReIcon/src/hooks";
 import { ref, computed, watch, onMounted, getCurrentInstance } from "vue";
 

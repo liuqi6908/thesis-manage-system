@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 import { message } from "@/utils/message";
 import { handleTree } from "@/utils/tree";
-import { classList } from "@/api/system";
+import { classList } from "@/api/admin";
 import { ElMessageBox } from "element-plus";
 import { ref, onMounted } from "vue";
 
@@ -13,6 +13,7 @@ export interface Info {
   status?: number;
   createTime?: number;
   desc?: string;
+  children?: Array<Info>;
 }
 
 export function useClass() {
@@ -47,7 +48,7 @@ export function useClass() {
     },
     {
       label: "状态",
-      minWidth: 70,
+      minWidth: 75,
       cellRenderer: scope => (
         <el-switch
           size={scope.props.size === "small" ? "small" : "default"}
@@ -126,11 +127,32 @@ export function useClass() {
   }
 
   function handleUpdate(row) {
-    console.log(row);
+    if (row.type !== 3)
+      return message("禁止对学院/专业进行修改", {
+        type: "warning"
+      });
   }
 
   function handleDelete(row) {
-    console.log(row);
+    if (row.type !== 3)
+      return message("禁止对学院/专业进行删除", {
+        type: "warning"
+      });
+    for (let i = 0; i < dataList.value.length; i++) {
+      for (let j = 0; j < dataList.value[i].children.length; j++) {
+        if (row.parentId === dataList.value[i].children[j].id) {
+          const index = dataList.value[i].children[j].children
+            .map(item => item.id)
+            .indexOf(row.id);
+          if (index >= 0)
+            dataList.value[i].children[j].children.splice(index, 1);
+          message("删除成功", {
+            type: "success"
+          });
+          return;
+        }
+      }
+    }
   }
 
   async function onSearch() {

@@ -1,25 +1,22 @@
 import dayjs from "dayjs";
 import { message } from "@/utils/message";
-import { teacherList } from "@/api/admin";
-import { ElMessageBox } from "element-plus";
+import { reviewedList } from "@/api/teacher";
 import { type PaginationProps, LoadingConfig } from "@pureadmin/table";
 import { reactive, ref, onMounted } from "vue";
 import { delay } from "@pureadmin/utils";
+import { useUserStore } from "@/store/modules/user";
 
 export interface Info {
   id?: number;
-  username?: string;
-  userNo?: string;
-  gender?: string;
-  college?: string;
-  jobTitle?: string;
-  phone?: string;
-  email?: string;
+  thesis?: string;
+  studentName?: string;
+  studentNo?: string;
   status?: number;
+  feedback?: string;
   createTime?: number;
 }
 
-export function useTeacher() {
+export function useReviewed() {
   const dataList = ref<Info[]>();
   const loading = ref(true);
   const loadingConfig = reactive<LoadingConfig>({
@@ -37,7 +34,6 @@ export function useTeacher() {
       `
   });
 
-  const switchLoadMap = ref({});
   const pagination = reactive<PaginationProps>({
     total: 0,
     pageSize: 10,
@@ -58,56 +54,42 @@ export function useTeacher() {
       hide: ({ checkList }) => !checkList.includes("序号列")
     },
     {
-      label: "姓名",
-      prop: "username",
-      minWidth: 100
-    },
-    {
-      label: "职工号",
-      prop: "userNo",
-      minWidth: 100
-    },
-    {
-      label: "性别",
-      prop: "gender",
-      minWidth: 70
-    },
-    {
-      label: "学院",
-      prop: "college",
+      label: "题目",
+      prop: "thesis",
       minWidth: 150
     },
     {
-      label: "职称",
-      prop: "jobTitle",
+      label: "姓名",
+      prop: "studentName",
       minWidth: 100
     },
     {
-      label: "手机号",
-      prop: "phone",
-      minWidth: 120
-    },
-    {
-      label: "电子邮箱",
-      prop: "email",
-      minWidth: 120
+      label: "学号",
+      prop: "studentNo",
+      minWidth: 100
     },
     {
       label: "状态",
-      minWidth: 75,
+      minWidth: 110,
       cellRenderer: scope => (
-        <el-switch
-          size={scope.props.size === "small" ? "small" : "default"}
-          loading={switchLoadMap.value[scope.index]?.loading}
-          v-model={scope.row.status}
-          active-value={1}
-          inactive-value={0}
-          active-text="启用"
-          inactive-text="禁用"
-          inline-prompt
-          onChange={() => onChange(scope as any)}
-        />
+        <el-tag
+          key={scope.row.id}
+          type={["info", "", "success", "warning", "danger"][scope.row.status]}
+          class="mx-1"
+          effect="dark"
+        >
+          {
+            ["未提交", "待审核", "审核通过", "打回修改", "挂起/退修"][
+              scope.row.status
+            ]
+          }
+        </el-tag>
       )
+    },
+    {
+      label: "反馈",
+      prop: "feedback",
+      minWidth: 160
     },
     {
       label: "创建时间",
@@ -124,58 +106,12 @@ export function useTeacher() {
     }
   ];
 
-  function onChange({ row, index }) {
-    ElMessageBox.confirm(
-      `确认要 <strong>${
-        row.status === 0 ? "禁用" : "启用"
-      }</strong> <strong style='color:var(--el-color-primary)'>${
-        row.username
-      }</strong> 教师账号吗?`,
-      "系统提示",
-      {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
-        dangerouslyUseHTMLString: true,
-        draggable: true
-      }
-    )
-      .then(() => {
-        switchLoadMap.value[index] = Object.assign(
-          {},
-          switchLoadMap.value[index],
-          {
-            loading: true
-          }
-        );
-        setTimeout(() => {
-          switchLoadMap.value[index] = Object.assign(
-            {},
-            switchLoadMap.value[index],
-            {
-              loading: false
-            }
-          );
-          message("已成功修改账号状态", {
-            type: "success"
-          });
-        }, 300);
-      })
-      .catch(() => {
-        row.status === 0 ? (row.status = 1) : (row.status = 0);
-      });
-  }
-
-  function handleUpdate(row) {
+  function handleDownload(row) {
     console.log(row);
   }
 
-  function handleDelete(row) {
-    const index = dataList.value.map(item => item.id).indexOf(row.id);
-    if (index >= 0) dataList.value.splice(index, 1);
-    message("删除成功", {
-      type: "success"
-    });
+  function handleChange(row) {
+    console.log(row);
   }
 
   function handleSizeChange(val: number) {
@@ -192,7 +128,8 @@ export function useTeacher() {
 
   async function onSearch() {
     loading.value = true;
-    await teacherList()
+    const { userNo } = useUserStore();
+    await reviewedList({ userNo })
       .then(res => {
         if (res.success) {
           dataList.value = res.data;
@@ -221,8 +158,8 @@ export function useTeacher() {
     dataList,
     pagination,
     onSearch,
-    handleUpdate,
-    handleDelete,
+    handleDownload,
+    handleChange,
     handleSizeChange,
     handleCurrentChange
   };

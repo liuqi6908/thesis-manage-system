@@ -26,7 +26,10 @@ export function useColumns() {
       label: "预览地址",
       cellRenderer: () => {
         return (
-          <a href="http://127.0.0.1:8848" target="_blank">
+          <a
+            href="https://liuqi6908.github.io/thesis-manage-system/"
+            target="_blank"
+          >
             <span style="color: var(--el-color-primary)">预览地址</span>
           </a>
         );
@@ -37,7 +40,7 @@ export function useColumns() {
       cellRenderer: () => {
         return (
           <a
-            href="https://github.com/lq2402491348/thesis-manage-system"
+            href="https://github.com/liuqi6908/thesis-manage-system"
             target="_blank"
           >
             <span style="color: var(--el-color-primary)">Github</span>

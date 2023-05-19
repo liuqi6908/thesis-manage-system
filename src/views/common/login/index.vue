@@ -217,6 +217,7 @@ watch(imgCode, value => {
           <Motion>
             <h2 class="outline-none">
               <TypeIt
+                :key="transformI18n($t('title.title'))"
                 :values="[transformI18n($t('title.title'))]"
                 :cursor="false"
                 :speed="150"
