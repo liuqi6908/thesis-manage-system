@@ -1,0 +1,1 @@
+import{h as s}from"./index-6808ba74.js";const r=t=>s.request("post","/adminTeacherList",{data:t}),a=t=>s.request("post","/adminStudentList",{data:t}),n=t=>s.request("post","/adminClassList",{data:t});export{n as c,a as s,r as t};
