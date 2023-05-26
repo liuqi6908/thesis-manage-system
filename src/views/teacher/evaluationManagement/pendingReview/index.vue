@@ -21,16 +21,15 @@ const {
   pagination,
   onSearch,
   handleDownload,
-  handlePass,
-  handleNoPass,
+  handleAudit,
   handleSizeChange,
   handleCurrentChange
 } = useEvaluation();
 
 const form = reactive({
-  studentName: "",
-  studentNo: "",
-  thesis: ""
+  title: "",
+  username: "",
+  userNo: ""
 });
 
 const resetForm = formEl => {
@@ -43,24 +42,18 @@ const filterList: ComputedRef<Info[]> = computed(() => {
   if (dataList.value)
     return dataList.value
       .filter(item => {
-        if (item.studentName)
-          return item.studentName
-            .toString()
-            .toLowerCase()
-            .includes(form.studentName);
+        if (item.title)
+          return item.title.toString().toLowerCase().includes(form.title);
         else return false;
       })
       .filter(item => {
-        if (item.studentNo)
-          return item.studentNo
-            .toString()
-            .toLowerCase()
-            .includes(form.studentNo);
+        if (item.username)
+          return item.username.toString().toLowerCase().includes(form.username);
         else return false;
       })
       .filter(item => {
-        if (item.thesis)
-          return item.thesis.toString().toLowerCase().includes(form.thesis);
+        if (item.userNo)
+          return item.userNo.toString().toLowerCase().includes(form.userNo);
         else return false;
       });
   else return [];
@@ -80,26 +73,26 @@ watchEffect(() => {
       :model="form"
       class="bg-bg_color w-[99/100] pl-8 pt-4"
     >
-      <el-form-item label="学生姓名：" prop="studentName">
+      <el-form-item label="课题名称：" prop="title">
         <el-input
-          v-model="form.studentName"
+          v-model="form.title"
+          placeholder="请输入课题名称"
+          clearable
+          class="!w-[200px]"
+        />
+      </el-form-item>
+      <el-form-item label="学生姓名：" prop="username">
+        <el-input
+          v-model="form.username"
           placeholder="请输入学生姓名"
           clearable
           class="!w-[200px]"
         />
       </el-form-item>
-      <el-form-item label="学号：" prop="studentNo">
+      <el-form-item label="学号：" prop="userNo">
         <el-input
-          v-model="form.studentNo"
+          v-model="form.userNo"
           placeholder="请输入学号"
-          clearable
-          class="!w-[200px]"
-        />
-      </el-form-item>
-      <el-form-item label="论文题目：" prop="thesis">
-        <el-input
-          v-model="form.thesis"
-          placeholder="请输入论文题目"
           clearable
           class="!w-[200px]"
         />
@@ -153,27 +146,16 @@ watchEffect(() => {
             >
               下载
             </el-button>
-            <el-popconfirm
-              title="评审是否通过?"
-              cancel-button-text="驳回"
-              confirm-button-text="通过"
-              cancel-button-type="danger"
-              confirm-button-type="success"
-              @confirm="handlePass(row)"
-              @cancel="handleNoPass(row)"
+            <el-button
+              class="reset-margin"
+              link
+              type="primary"
+              :size="size"
+              :icon="useRenderIcon(Edit)"
+              @click="handleAudit(row)"
             >
-              <template #reference>
-                <el-button
-                  class="reset-margin"
-                  link
-                  type="primary"
-                  :size="size"
-                  :icon="useRenderIcon(Edit)"
-                >
-                  评审
-                </el-button>
-              </template>
-            </el-popconfirm>
+              评审
+            </el-button>
           </template>
         </pure-table>
       </template>

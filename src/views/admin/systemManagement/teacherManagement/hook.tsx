@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
 import { message } from "@/utils/message";
-import { teacherList } from "@/api/admin";
+import { teacherList } from "@/api/admin/system";
 import { ElMessageBox } from "element-plus";
 import { type PaginationProps, LoadingConfig } from "@pureadmin/table";
 import { reactive, ref, onMounted } from "vue";

@@ -1,23 +1,32 @@
 import dayjs from "dayjs";
 import { message } from "@/utils/message";
-import { evaluationList } from "@/api/admin";
+import { getStudentList } from "@/api/teacher/student";
 import { type PaginationProps, LoadingConfig } from "@pureadmin/table";
 import { reactive, ref, onMounted } from "vue";
 import { delay } from "@pureadmin/utils";
 
 export interface Info {
+  /** 课题编号 */
   id?: number;
-  name?: string;
-  teacherName?: string;
-  studentName?: string;
-  studentNo?: string;
-  status?: number;
-  feedback?: string;
+  /** 姓名 */
+  username?: string;
+  /** 学院 */
+  college?: string;
+  /** 专业 */
+  major?: string;
+  /** 班级 */
+  class?: string;
+  /** 学号 */
+  userNo?: string;
+  /** 课题名称 */
+  title?: string;
+  /** 创建时间 */
   createTime?: number;
 }
 
-export function useEvaluation() {
+export function useData() {
   const dataList = ref<Info[]>();
+  const multipleSelection = ref<Info>();
   const loading = ref(true);
   const loadingConfig = reactive<LoadingConfig>({
     text: "正在加载第1页...",
@@ -43,7 +52,7 @@ export function useEvaluation() {
   const columns: TableColumnList = [
     {
       type: "selection",
-      width: 50,
+      width: 45,
       align: "left",
       hide: ({ checkList }) => !checkList.includes("勾选列")
     },
@@ -54,47 +63,34 @@ export function useEvaluation() {
       hide: ({ checkList }) => !checkList.includes("序号列")
     },
     {
-      label: "题目",
-      prop: "name",
+      label: "姓名",
+      prop: "username",
+      minWidth: 90
+    },
+    {
+      label: "学院",
+      prop: "college",
+      minWidth: 120
+    },
+    {
+      label: "专业",
+      prop: "major",
       minWidth: 150
     },
     {
-      label: "指导教师",
-      prop: "teacherName",
-      minWidth: 100
-    },
-    {
-      label: "学生姓名",
-      prop: "studentName",
-      minWidth: 100
+      label: "班级",
+      prop: "class",
+      minWidth: 90
     },
     {
       label: "学号",
-      prop: "studentNo",
-      minWidth: 100
+      prop: "userNo",
+      minWidth: 90
     },
     {
-      label: "状态",
-      minWidth: 110,
-      cellRenderer: scope => (
-        <el-tag
-          key={scope.row.id}
-          type={["info", "", "success", "warning", "danger"][scope.row.status]}
-          class="mx-1"
-          effect="dark"
-        >
-          {
-            ["未提交", "待审核", "审核通过", "打回修改", "挂起/退修"][
-              scope.row.status
-            ]
-          }
-        </el-tag>
-      )
-    },
-    {
-      label: "反馈",
-      prop: "feedback",
-      minWidth: 160
+      label: "课题名称",
+      prop: "title",
+      minWidth: 220
     },
     {
       label: "创建时间",
@@ -102,25 +98,15 @@ export function useEvaluation() {
       prop: "createTime",
       formatter: ({ createTime }) =>
         dayjs(createTime).format("YYYY-MM-DD HH:mm:ss")
-    },
-    {
-      label: "操作",
-      fixed: "right",
-      width: 150,
-      slot: "operation"
     }
   ];
 
-  function handleUpdate(row) {
-    console.log(row);
-  }
-
-  function handleDelete(row) {
-    console.log(row);
-  }
-
-  function handleSizeChange(val: number) {
-    console.log(`${val} items per page`);
+  function handleSizeChange() {
+    loadingConfig.text = `正在加载...`;
+    loading.value = true;
+    delay(500).then(() => {
+      loading.value = false;
+    });
   }
 
   function handleCurrentChange(val: number) {
@@ -131,9 +117,13 @@ export function useEvaluation() {
     });
   }
 
-  async function onSearch() {
+  function handleSelectionChange(val: Info) {
+    multipleSelection.value = val;
+  }
+
+  function onSearch() {
     loading.value = true;
-    await evaluationList()
+    getStudentList({ status: 1 })
       .then(res => {
         if (res.success) {
           dataList.value = res.data;
@@ -156,15 +146,15 @@ export function useEvaluation() {
   });
 
   return {
+    dataList,
     loading,
     loadingConfig,
     columns,
-    dataList,
     pagination,
+    multipleSelection,
     onSearch,
-    handleUpdate,
-    handleDelete,
     handleSizeChange,
-    handleCurrentChange
+    handleCurrentChange,
+    handleSelectionChange
   };
 }

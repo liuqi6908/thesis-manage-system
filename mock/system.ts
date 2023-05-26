@@ -3955,10 +3955,12 @@ export default [
     method: "post",
     response: ({ body }) => {
       const arr = classList.filter(item => {
-        if (body.type && body.id)
-          return item.type === body.type && item.parentId === body.id;
-        else if (body.type) return item.type === body.type;
-        else return true;
+        if (body) {
+          if (body.type && body.id)
+            return item.type === body.type && item.parentId === body.id;
+          else if (body.type) return item.type === body.type;
+          else return true;
+        } else return true;
       });
       return {
         success: true,

@@ -10,7 +10,7 @@ import {
 import { Info, useTeacher } from "./hook";
 import { PureTableBar } from "@/components/RePureTableBar";
 import { useRenderIcon } from "@/components/ReIcon/src/hooks";
-import { classList } from "@/api/admin";
+import { classList } from "@/api/admin/system";
 import type { FormInstance } from "element-plus";
 import { message } from "@/utils/message";
 

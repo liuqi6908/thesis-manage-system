@@ -4,7 +4,6 @@ import { Info, useStudent } from "./hook";
 import { PureTableBar } from "@/components/RePureTableBar";
 import { useRenderIcon } from "@/components/ReIcon/src/hooks";
 
-import Delete from "@iconify-icons/ep/delete";
 import EditPen from "@iconify-icons/ep/edit-pen";
 import Refresh from "@iconify-icons/ep/refresh";
 
@@ -18,18 +17,18 @@ const {
   loadingConfig,
   columns,
   dataList,
+  statusList,
   pagination,
   onSearch,
   handleUpdate,
-  handleDelete,
   handleSizeChange,
   handleCurrentChange
 } = useStudent();
 
 const form = reactive({
-  studentName: "",
-  studentNo: "",
-  thesis: "",
+  username: "",
+  userNo: "",
+  title: "",
   status: null
 });
 
@@ -43,29 +42,20 @@ const filterList: ComputedRef<Info[]> = computed(() => {
   if (dataList.value)
     return dataList.value
       .filter(item => {
-        if (item.studentName)
-          return item.studentName
-            .toString()
-            .toLowerCase()
-            .includes(form.studentName);
+        if (item.username)
+          return item.username.toString().includes(form.username);
         else return false;
       })
       .filter(item => {
-        if (item.studentNo)
-          return item.studentNo
-            .toString()
-            .toLowerCase()
-            .includes(form.studentNo);
+        if (item.userNo) return item.userNo.toString().includes(form.userNo);
         else return false;
       })
       .filter(item => {
-        if (item.thesis)
-          return item.thesis.toString().toLowerCase().includes(form.thesis);
+        if (item.title) return item.title.toString().includes(form.title);
         else return false;
       })
       .filter(item => {
-        if ([0, 1, 2, 3, 4].includes(form.status))
-          return item.status === form.status;
+        if ([0, 1, 2].includes(form.status)) return item.status === form.status;
         else return true;
       });
   else return [];
@@ -87,7 +77,7 @@ watchEffect(() => {
     >
       <el-form-item label="学生姓名：" prop="username">
         <el-input
-          v-model="form.studentName"
+          v-model="form.username"
           placeholder="请输入学生姓名"
           clearable
           class="!w-[200px]"
@@ -95,32 +85,33 @@ watchEffect(() => {
       </el-form-item>
       <el-form-item label="学号：" prop="userNo">
         <el-input
-          v-model="form.studentNo"
+          v-model="form.userNo"
           placeholder="请输入学号"
           clearable
           class="!w-[200px]"
         />
       </el-form-item>
-      <el-form-item label="论文题目：" prop="thesis">
+      <el-form-item label="论文题目：" prop="title">
         <el-input
-          v-model="form.thesis"
+          v-model="form.title"
           placeholder="请输入论文题目"
           clearable
           class="!w-[200px]"
         />
       </el-form-item>
-      <el-form-item label="状态：" prop="status">
+      <el-form-item label="选题状态：" prop="status">
         <el-select
           v-model="form.status"
-          placeholder="请选择状态"
+          placeholder="请选择选题状态"
           clearable
           class="!w-[180px]"
         >
-          <el-option label="未提交" :value="0" />
-          <el-option label="待审核" :value="1" />
-          <el-option label="审核通过" :value="2" />
-          <el-option label="打回修改" :value="3" />
-          <el-option label="挂起/退修" :value="4" />
+          <el-option
+            v-for="(item, index) in statusList"
+            :key="index"
+            :label="item"
+            :value="index"
+          />
         </el-select>
       </el-form-item>
       <el-form-item>
@@ -158,26 +149,24 @@ watchEffect(() => {
           @page-current-change="handleCurrentChange"
         >
           <template #operation="{ row }">
-            <el-button
-              class="reset-margin"
-              link
-              type="primary"
-              :size="size"
-              :icon="useRenderIcon(EditPen)"
-              @click="handleUpdate(row)"
+            <el-popconfirm
+              title="审核提示!"
+              confirm-button-text="接收"
+              cancel-button-text="驳回"
+              cancel-button-type="danger"
+              @confirm="handleUpdate(row, 1)"
+              @cancel="handleUpdate(row, 2)"
             >
-              修改
-            </el-button>
-            <el-popconfirm title="是否确认删除?" @confirm="handleDelete(row)">
               <template #reference>
                 <el-button
                   class="reset-margin"
                   link
-                  type="danger"
+                  type="primary"
                   :size="size"
-                  :icon="useRenderIcon(Delete)"
+                  :disabled="row.status !== 0"
+                  :icon="useRenderIcon(EditPen)"
                 >
-                  删除
+                  审核
                 </el-button>
               </template>
             </el-popconfirm>

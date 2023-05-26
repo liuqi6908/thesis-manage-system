@@ -1,16 +1,31 @@
 import dayjs from "dayjs";
 import { message } from "@/utils/message";
-import { evaluationList } from "@/api/teacher";
+import { getPendingReviewList } from "@/api/teacher/evaluation";
+import { ElMessageBox } from "element-plus";
 import { type PaginationProps, LoadingConfig } from "@pureadmin/table";
 import { reactive, ref, onMounted } from "vue";
 import { delay } from "@pureadmin/utils";
-import { useUserStore } from "@/store/modules/user";
 
 export interface Info {
+  /** 评审编号 */
   id?: number;
-  thesis?: string;
-  studentName?: string;
-  studentNo?: string;
+  /** 课题名称 */
+  title?: string;
+  /** 学生姓名 */
+  username?: string;
+  /** 学号 */
+  userNo?: string;
+  /** 性别 */
+  gender?: string;
+  /** 学院 */
+  college?: string;
+  /** 专业 */
+  major?: string;
+  /** 班级 */
+  class?: string;
+  /** 下载链接 */
+  url?: string;
+  /** 创建时间 */
   createTime?: number;
 }
 
@@ -52,18 +67,38 @@ export function useEvaluation() {
       hide: ({ checkList }) => !checkList.includes("序号列")
     },
     {
-      label: "题目",
-      prop: "thesis",
+      label: "课题名称",
+      prop: "title",
       minWidth: 150
     },
     {
       label: "姓名",
-      prop: "studentName",
+      prop: "username",
       minWidth: 100
     },
     {
       label: "学号",
-      prop: "studentNo",
+      prop: "userNo",
+      minWidth: 100
+    },
+    {
+      label: "性别",
+      prop: "gender",
+      minWidth: 70
+    },
+    {
+      label: "学院",
+      prop: "college",
+      minWidth: 150
+    },
+    {
+      label: "专业",
+      prop: "major",
+      minWidth: 150
+    },
+    {
+      label: "班级",
+      prop: "class",
       minWidth: 100
     },
     {
@@ -81,20 +116,40 @@ export function useEvaluation() {
     }
   ];
 
-  function handleDownload(row) {
-    console.log(row);
+  function handleDownload(val: Info) {
+    if (val.url) window.open(val.url);
+    else
+      message("下载失败，暂无文件", {
+        type: "error",
+        grouping: true
+      });
   }
 
-  function handlePass(row) {
-    console.log(row);
+  function handleAudit(row) {
+    ElMessageBox.prompt("请输入该课题的评审评分：", "评审提示", {
+      confirmButtonText: "确定",
+      cancelButtonText: "取消",
+      inputType: "number",
+      inputErrorMessage: "请输入正确格式"
+    })
+      .then(() => {
+        loading.value = true;
+        setTimeout(() => {
+          // 将该条评审从 dataList 移除
+          const index = dataList.value.findIndex(item => item.id === row.id);
+          if (index > -1) dataList.value.splice(index, 1);
+          loading.value = false;
+        }, 1000);
+      })
+      .catch(() => {});
   }
 
-  function handleNoPass(row) {
-    console.log(row);
-  }
-
-  function handleSizeChange(val: number) {
-    console.log(`${val} items per page`);
+  function handleSizeChange() {
+    loadingConfig.text = `正在加载...`;
+    loading.value = true;
+    delay(500).then(() => {
+      loading.value = false;
+    });
   }
 
   function handleCurrentChange(val: number) {
@@ -105,10 +160,9 @@ export function useEvaluation() {
     });
   }
 
-  async function onSearch() {
+  function onSearch() {
     loading.value = true;
-    const { userNo } = useUserStore();
-    await evaluationList({ userNo })
+    getPendingReviewList()
       .then(res => {
         if (res.success) {
           dataList.value = res.data;
@@ -138,8 +192,7 @@ export function useEvaluation() {
     pagination,
     onSearch,
     handleDownload,
-    handlePass,
-    handleNoPass,
+    handleAudit,
     handleSizeChange,
     handleCurrentChange
   };

@@ -1,18 +1,32 @@
 import dayjs from "dayjs";
 import { message } from "@/utils/message";
-import { reviewedList } from "@/api/teacher";
+import { getReviewedList } from "@/api/teacher/evaluation";
 import { type PaginationProps, LoadingConfig } from "@pureadmin/table";
 import { reactive, ref, onMounted } from "vue";
 import { delay } from "@pureadmin/utils";
-import { useUserStore } from "@/store/modules/user";
 
 export interface Info {
+  /** 评审编号 */
   id?: number;
-  thesis?: string;
-  studentName?: string;
-  studentNo?: string;
-  status?: number;
-  feedback?: string;
+  /** 课题名称 */
+  title?: string;
+  /** 学生姓名 */
+  username?: string;
+  /** 学号 */
+  userNo?: string;
+  /** 性别 */
+  gender?: string;
+  /** 学院 */
+  college?: string;
+  /** 专业 */
+  major?: string;
+  /** 班级 */
+  class?: string;
+  /** 下载链接 */
+  url?: string;
+  /** 评分 */
+  score?: string | number;
+  /** 创建时间 */
   createTime?: number;
 }
 
@@ -54,42 +68,44 @@ export function useReviewed() {
       hide: ({ checkList }) => !checkList.includes("序号列")
     },
     {
-      label: "题目",
-      prop: "thesis",
-      minWidth: 150
+      label: "课题名称",
+      prop: "title",
+      minWidth: 200
     },
     {
       label: "姓名",
-      prop: "studentName",
+      prop: "username",
       minWidth: 100
     },
     {
       label: "学号",
-      prop: "studentNo",
+      prop: "userNo",
       minWidth: 100
     },
     {
-      label: "状态",
-      minWidth: 110,
-      cellRenderer: scope => (
-        <el-tag
-          key={scope.row.id}
-          type={["info", "", "success", "warning", "danger"][scope.row.status]}
-          class="mx-1"
-          effect="dark"
-        >
-          {
-            ["未提交", "待审核", "审核通过", "打回修改", "挂起/退修"][
-              scope.row.status
-            ]
-          }
-        </el-tag>
-      )
+      label: "性别",
+      prop: "gender",
+      minWidth: 70
     },
     {
-      label: "反馈",
-      prop: "feedback",
-      minWidth: 160
+      label: "学院",
+      prop: "college",
+      minWidth: 150
+    },
+    {
+      label: "专业",
+      prop: "major",
+      minWidth: 150
+    },
+    {
+      label: "班级",
+      prop: "class",
+      minWidth: 100
+    },
+    {
+      label: "评分",
+      prop: "score",
+      minWidth: 90
     },
     {
       label: "创建时间",
@@ -101,21 +117,26 @@ export function useReviewed() {
     {
       label: "操作",
       fixed: "right",
-      width: 150,
+      width: 100,
       slot: "operation"
     }
   ];
 
-  function handleDownload(row) {
-    console.log(row);
+  function handleDownload(val) {
+    if (val.url) window.open(val.url);
+    else
+      message("下载失败，暂无文件", {
+        type: "error",
+        grouping: true
+      });
   }
 
-  function handleChange(row) {
-    console.log(row);
-  }
-
-  function handleSizeChange(val: number) {
-    console.log(`${val} items per page`);
+  function handleSizeChange() {
+    loadingConfig.text = `正在加载...`;
+    loading.value = true;
+    delay(500).then(() => {
+      loading.value = false;
+    });
   }
 
   function handleCurrentChange(val: number) {
@@ -126,10 +147,9 @@ export function useReviewed() {
     });
   }
 
-  async function onSearch() {
+  function onSearch() {
     loading.value = true;
-    const { userNo } = useUserStore();
-    await reviewedList({ userNo })
+    getReviewedList()
       .then(res => {
         if (res.success) {
           dataList.value = res.data;
@@ -159,7 +179,6 @@ export function useReviewed() {
     pagination,
     onSearch,
     handleDownload,
-    handleChange,
     handleSizeChange,
     handleCurrentChange
   };

@@ -1,16 +1,13 @@
 <script setup lang="ts">
 import { ref, reactive, ComputedRef, computed, watchEffect } from "vue";
-import { Info, useThesis } from "./hook";
+import { Info, useTopic } from "./hook";
 import { PureTableBar } from "@/components/RePureTableBar";
 import { useRenderIcon } from "@/components/ReIcon/src/hooks";
 
-import Delete from "@iconify-icons/ep/delete";
-import EditPen from "@iconify-icons/ep/edit-pen";
 import Refresh from "@iconify-icons/ep/refresh";
-import AddFill from "@iconify-icons/ri/add-circle-line";
 
 defineOptions({
-  name: "ThesisManagement"
+  name: "TopicList"
 });
 
 const formRef = ref();
@@ -19,17 +16,18 @@ const {
   loadingConfig,
   columns,
   dataList,
+  typeList,
+  statusList,
   pagination,
   onSearch,
-  handleUpdate,
-  handleDelete,
   handleSizeChange,
   handleCurrentChange
-} = useThesis();
+} = useTopic();
 
 const form = reactive({
-  name: "",
-  teacherName: "",
+  title: "",
+  type: null,
+  teacher: "",
   status: null
 });
 
@@ -43,21 +41,21 @@ const filterList: ComputedRef<Info[]> = computed(() => {
   if (dataList.value)
     return dataList.value
       .filter(item => {
-        if (item.name)
-          return item.name.toString().toLowerCase().includes(form.name);
+        if (item.title)
+          return item.title.toString().toLowerCase().includes(form.title);
         else return false;
       })
       .filter(item => {
-        if (item.teacherName)
-          return item.teacherName
-            .toString()
-            .toLowerCase()
-            .includes(form.teacherName);
+        if (item.teacher)
+          return item.teacher.toString().toLowerCase().includes(form.teacher);
         else return false;
       })
       .filter(item => {
-        if ([0, 1, 2, 3, 4].includes(form.status))
-          return item.status === form.status;
+        if ([0, 1, 2, 3].includes(form.type)) return item.type === form.type;
+        else return true;
+      })
+      .filter(item => {
+        if ([0, 1, 2].includes(form.status)) return item.status === form.status;
         else return true;
       });
   else return [];
@@ -77,34 +75,50 @@ watchEffect(() => {
       :model="form"
       class="bg-bg_color w-[99/100] pl-8 pt-4"
     >
-      <el-form-item label="题目：" prop="username">
+      <el-form-item label="课题名称：" prop="title">
         <el-input
-          v-model="form.name"
-          placeholder="请输入题目"
+          v-model="form.title"
+          placeholder="请输入课题名称"
           clearable
           class="!w-[200px]"
         />
       </el-form-item>
-      <el-form-item label="指导教师：" prop="userNo">
+      <el-form-item label="课题类型：" prop="type">
+        <el-select
+          v-model="form.type"
+          placeholder="请选择课题类型"
+          clearable
+          class="!w-[180px]"
+        >
+          <el-option
+            v-for="(item, index) in typeList"
+            :key="index"
+            :label="item"
+            :value="index"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="指导教师：" prop="teacher">
         <el-input
-          v-model="form.teacherName"
+          v-model="form.teacher"
           placeholder="请输入指导教师"
           clearable
           class="!w-[200px]"
         />
       </el-form-item>
-      <el-form-item label="状态：" prop="status">
+      <el-form-item label="课题状态：" prop="status">
         <el-select
           v-model="form.status"
-          placeholder="请选择状态"
+          placeholder="请选择课题状态"
           clearable
           class="!w-[180px]"
         >
-          <el-option label="未提交" :value="0" />
-          <el-option label="待审核" :value="1" />
-          <el-option label="审核通过" :value="2" />
-          <el-option label="打回修改" :value="3" />
-          <el-option label="挂起/退修" :value="4" />
+          <el-option
+            v-for="(item, index) in statusList"
+            :key="index"
+            :label="item"
+            :value="index"
+          />
         </el-select>
       </el-form-item>
       <el-form-item>
@@ -114,12 +128,7 @@ watchEffect(() => {
       </el-form-item>
     </el-form>
 
-    <PureTableBar title="论文列表" @refresh="onSearch" class="overflow-hidden">
-      <template #buttons>
-        <el-button type="primary" :icon="useRenderIcon(AddFill)">
-          新增论文
-        </el-button>
-      </template>
+    <PureTableBar title="课题列表" @refresh="onSearch" class="overflow-hidden">
       <template v-slot="{ size, checkList }">
         <pure-table
           border
@@ -145,33 +154,7 @@ watchEffect(() => {
           }"
           @page-size-change="handleSizeChange"
           @page-current-change="handleCurrentChange"
-        >
-          <template #operation="{ row }">
-            <el-button
-              class="reset-margin"
-              link
-              type="primary"
-              :size="size"
-              :icon="useRenderIcon(EditPen)"
-              @click="handleUpdate(row)"
-            >
-              修改
-            </el-button>
-            <el-popconfirm title="是否确认删除?" @confirm="handleDelete(row)">
-              <template #reference>
-                <el-button
-                  class="reset-margin"
-                  link
-                  type="danger"
-                  :size="size"
-                  :icon="useRenderIcon(Delete)"
-                >
-                  删除
-                </el-button>
-              </template>
-            </el-popconfirm>
-          </template>
-        </pure-table>
+        />
       </template>
     </PureTableBar>
   </div>

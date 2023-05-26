@@ -152,8 +152,8 @@ export default defineComponent({
 
               <el-popover v-slots={reference} width="200" trigger="click">
                 <el-checkbox-group v-model={checkList.value}>
-                  <el-checkbox label="序号列" />
-                  <el-checkbox label="勾选列" />
+                  <el-checkbox label="序号列" class="index" />
+                  <el-checkbox label="勾选列" class="selection" />
                 </el-checkbox-group>
               </el-popover>
             </div>

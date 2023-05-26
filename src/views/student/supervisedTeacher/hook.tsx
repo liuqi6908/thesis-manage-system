@@ -1,24 +1,33 @@
 import dayjs from "dayjs";
 import { message } from "@/utils/message";
-import { thesisList } from "@/api/admin";
+import { teacherInfo, applyList } from "@/api/student/teacher";
+import { ElMessageBox } from "element-plus";
 import { type PaginationProps, LoadingConfig } from "@pureadmin/table";
 import { reactive, ref, onMounted } from "vue";
 import { delay } from "@pureadmin/utils";
 
 export interface Info {
+  /** 申请编号 */
   id?: number;
-  name?: string;
-  teacherName?: string;
-  total?: number;
-  selected?: number;
-  studentName?: string;
-  studentNo?: string;
+  /** 原课题名称 */
+  oldTitle?: string;
+  /** 原指导教师 */
+  oldTeacher?: string;
+  /** 新指导教师 */
+  newTeacher?: string;
+  /** 状态（待审核、驳回、通过） */
   status?: number;
+  /** 创建时间 */
   createTime?: number;
 }
 
-export function useThesis() {
+export function useTeacher() {
+  /** 指导教师 */
+  const teacher = ref<any[]>();
+
+  /** 申请列表 */
   const dataList = ref<Info[]>();
+  const statusList = reactive(["待审核", "驳回", "通过"]);
   const loading = ref(true);
   const loadingConfig = reactive<LoadingConfig>({
     text: "正在加载第1页...",
@@ -55,50 +64,31 @@ export function useThesis() {
       hide: ({ checkList }) => !checkList.includes("序号列")
     },
     {
-      label: "题目",
-      prop: "name",
-      minWidth: 150
+      label: "原课题名称",
+      prop: "oldTitle",
+      minWidth: 260
     },
     {
-      label: "指导教师",
-      prop: "teacherName",
-      minWidth: 100
-    },
-    {
-      label: "可接收总人数",
-      prop: "total",
+      label: "原指导教师",
+      prop: "oldTeacher",
       minWidth: 120
     },
     {
-      label: "已选人数",
-      prop: "selected",
-      minWidth: 90
-    },
-    {
-      label: "学生姓名",
-      prop: "studentName",
-      minWidth: 100
-    },
-    {
-      label: "学号",
-      prop: "studentNo",
-      minWidth: 100
+      label: "新指导教师",
+      prop: "newTeacher",
+      minWidth: 120
     },
     {
       label: "状态",
-      minWidth: 110,
+      minWidth: 100,
       cellRenderer: scope => (
         <el-tag
           key={scope.row.id}
-          type={["info", "", "success", "warning", "danger"][scope.row.status]}
+          type={["warning", "danger", "primary"][scope.row.status]}
           class="mx-1"
-          effect="dark"
+          effect="light"
         >
-          {
-            ["未提交", "待审核", "审核通过", "打回修改", "挂起/退修"][
-              scope.row.status
-            ]
-          }
+          {statusList[scope.row.status]}
         </el-tag>
       )
     },
@@ -112,21 +102,46 @@ export function useThesis() {
     {
       label: "操作",
       fixed: "right",
-      width: 150,
+      width: 100,
       slot: "operation"
     }
   ];
 
-  function handleUpdate(row) {
-    console.log(row);
-  }
-
+  /** 删除申请 */
   function handleDelete(row) {
-    console.log(row);
+    ElMessageBox.confirm(
+      `确认要 <strong>删除</strong> <strong style='color:var(--el-color-primary)'>
+      ${row.newTeacher}</strong> 的指导教师更换申请吗?`,
+      "删除提示",
+      {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+        dangerouslyUseHTMLString: true,
+        draggable: true
+      }
+    )
+      .then(() => {
+        loading.value = true;
+        setTimeout(() => {
+          // 将申请从 dataList 中删除
+          const i = dataList.value.map(item => item.id).indexOf(row.id);
+          if (i > -1) dataList.value.splice(i, 1);
+          message("删除成功", {
+            type: "success"
+          });
+          loading.value = false;
+        }, 500);
+      })
+      .catch(() => {});
   }
 
-  function handleSizeChange(val: number) {
-    console.log(`${val} items per page`);
+  function handleSizeChange() {
+    loadingConfig.text = `正在加载...`;
+    loading.value = true;
+    delay(500).then(() => {
+      loading.value = false;
+    });
   }
 
   function handleCurrentChange(val: number) {
@@ -137,9 +152,9 @@ export function useThesis() {
     });
   }
 
-  async function onSearch() {
+  function onSearch() {
     loading.value = true;
-    await thesisList()
+    applyList()
       .then(res => {
         if (res.success) {
           dataList.value = res.data;
@@ -157,18 +172,32 @@ export function useThesis() {
       });
   }
 
+  function onSeacherTeacher() {
+    teacherInfo().then(res => {
+      if (res.success) {
+        teacher.value = res.data;
+      } else {
+        message(res.message, {
+          type: "error"
+        });
+      }
+    });
+  }
+
   onMounted(() => {
     onSearch();
+    onSeacherTeacher();
   });
 
   return {
+    teacher,
+    dataList,
     loading,
     loadingConfig,
     columns,
-    dataList,
+    statusList,
     pagination,
     onSearch,
-    handleUpdate,
     handleDelete,
     handleSizeChange,
     handleCurrentChange

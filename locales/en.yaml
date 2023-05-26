@@ -23,17 +23,25 @@ menus:
   studentManagement: Student management
   classManagement: Class management
   thesisManagement: Thesis management
-  evaluationResults: Evaluation results
+  topicAudit: Topic audit
+  topicList: Topic list
   dataStatistics: Data statistics
   thesisStatistics: Thesis statistics
   evaluationStatistics: Evaluation statistics
+  noticeManagement: Notice management
+  topicManagement: Topic management
   supervisedStudents: Supervised students
+  dataManagement: Data management
+  defenseManagement: Defense management
   evaluationManagement: Evaluation management
   pendingReview: Pending review
   reviewed: Reviewed
   thesisTopicSelection: Thesis topic selection
+  modifyTheTopic: Modify the topic
   supervisedTeacher: Supervised teacher
-  submitThesis: Submit thesis
+  submitData: Submit data
+  defenseInformation: Defense information
+  checkTheScore: Check the score
   user: User center
   userinfo: UserInfo
   changePassword: Change password

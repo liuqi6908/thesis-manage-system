@@ -3,7 +3,7 @@ import MdEditor from "md-editor-v3";
 import Pie from "./components/Pie.vue";
 import Line from "./components/Line.vue";
 import TypeIt from "@/components/ReTypeit";
-import { ref, computed, markRaw, onBeforeMount } from "vue";
+import { ref, markRaw, onBeforeMount } from "vue";
 import { randomColor } from "@pureadmin/utils";
 import { useRenderFlicker } from "@/components/ReFlicker";
 import { processManagement } from "@/api/admin";
@@ -14,9 +14,6 @@ defineOptions({
 
 const list = ref();
 const loading = ref<boolean>(true);
-const titleClass = computed(() => {
-  return ["text-base", "font-medium"];
-});
 
 setTimeout(() => {
   loading.value = !loading.value;

@@ -41,7 +41,7 @@ export default [
         {
           id: 5,
           thesis: "基于EEG信号的视频偏好评价方法研究",
-          teacherNo: "teacher04",
+          teacherNo: "teacher0",
           studentName: "王同学",
           studentNo: "19051105",
           createTime: 1609840000000
@@ -137,7 +137,7 @@ export default [
         {
           id: 17,
           thesis: "基于边缘计算的相片手绘化设计与实现",
-          teacherNo: "teacher02",
+          teacherNo: "teacher",
           studentName: "张同学",
           studentNo: "19051207",
           createTime: 1609840000000
@@ -153,7 +153,7 @@ export default [
         {
           id: 19,
           thesis: "基于双目立体视觉的机动车车距监测的设计与实现",
-          teacherNo: "teacher04",
+          teacherNo: "teacher",
           studentName: "赵同学",
           studentNo: "19051209",
           createTime: 1609840000000
@@ -161,7 +161,7 @@ export default [
         {
           id: 20,
           thesis: "基于linux的嵌入式音视频智能监控系统设计与实现",
-          teacherNo: "teacher05",
+          teacherNo: "teacher",
           studentName: "钱同学",
           studentNo: "19051210",
           createTime: 1609840000000
@@ -249,16 +249,6 @@ export default [
           createTime: 1609840000000
         },
         {
-          id: 8,
-          thesis: "基于Spring与Vue的在线聊天室的设计与开发",
-          teacherNo: "teacher",
-          studentName: "孙同学",
-          studentNo: "19051108",
-          status: 3,
-          feedback: "论文字数不足，打回修改",
-          createTime: 1609840000000
-        },
-        {
           id: 9,
           thesis: "基于Golang的课室多媒体设备报障系统设计与实现",
           teacherNo: "teacher01",
@@ -314,16 +304,6 @@ export default [
           teacherNo: "teacher06",
           studentName: "李同学",
           studentNo: "19051204",
-          status: 2,
-          feedback: "达到要求，通过",
-          createTime: 1609840000000
-        },
-        {
-          id: 15,
-          thesis: "基于MQTT的智能家居系统设计与实现",
-          teacherNo: "teacher",
-          studentName: "郑同学",
-          studentNo: "19051205",
           status: 2,
           feedback: "达到要求，通过",
           createTime: 1609840000000
@@ -386,16 +366,6 @@ export default [
           studentNo: "19051301",
           status: 2,
           feedback: "达到要求，通过",
-          createTime: 1609840000000
-        },
-        {
-          id: 22,
-          thesis: "基于声音评价的语言学习辅助系统设计与实现",
-          teacherNo: "teacher",
-          studentName: "李同学",
-          studentNo: "19051302",
-          status: 3,
-          feedback: "论文字数不足，打回修改",
           createTime: 1609840000000
         },
         {

@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 import { message } from "@/utils/message";
 import { handleTree } from "@/utils/tree";
-import { classList } from "@/api/admin";
+import { classList } from "@/api/admin/system";
 import { ElMessageBox } from "element-plus";
 import { ref, onMounted } from "vue";
 

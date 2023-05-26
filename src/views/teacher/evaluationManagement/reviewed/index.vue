@@ -5,7 +5,6 @@ import { PureTableBar } from "@/components/RePureTableBar";
 import { useRenderIcon } from "@/components/ReIcon/src/hooks";
 
 import Download from "@iconify-icons/ep/download";
-import EditPen from "@iconify-icons/ep/edit-pen";
 import Refresh from "@iconify-icons/ep/refresh";
 
 defineOptions({
@@ -21,16 +20,14 @@ const {
   pagination,
   onSearch,
   handleDownload,
-  handleChange,
   handleSizeChange,
   handleCurrentChange
 } = useReviewed();
 
 const form = reactive({
-  studentName: "",
-  studentNo: "",
-  thesis: "",
-  status: null
+  title: "",
+  username: "",
+  userNo: ""
 });
 
 const resetForm = formEl => {
@@ -43,29 +40,19 @@ const filterList: ComputedRef<Info[]> = computed(() => {
   if (dataList.value)
     return dataList.value
       .filter(item => {
-        if (item.studentName)
-          return item.studentName
-            .toString()
-            .toLowerCase()
-            .includes(form.studentName);
+        if (item.title)
+          return item.title.toString().toLowerCase().includes(form.title);
         else return false;
       })
       .filter(item => {
-        if (item.studentNo)
-          return item.studentNo
-            .toString()
-            .toLowerCase()
-            .includes(form.studentNo);
+        if (item.username)
+          return item.username.toString().toLowerCase().includes(form.username);
         else return false;
       })
       .filter(item => {
-        if (item.thesis)
-          return item.thesis.toString().toLowerCase().includes(form.thesis);
+        if (item.userNo)
+          return item.userNo.toString().toLowerCase().includes(form.userNo);
         else return false;
-      })
-      .filter(item => {
-        if ([2, 3, 4].includes(form.status)) return item.status === form.status;
-        else return true;
       });
   else return [];
 });
@@ -84,41 +71,29 @@ watchEffect(() => {
       :model="form"
       class="bg-bg_color w-[99/100] pl-8 pt-4"
     >
-      <el-form-item label="学生姓名：" prop="studentName">
+      <el-form-item label="课题名称：" prop="title">
         <el-input
-          v-model="form.studentName"
+          v-model="form.title"
+          placeholder="请输入课题名称"
+          clearable
+          class="!w-[200px]"
+        />
+      </el-form-item>
+      <el-form-item label="学生姓名：" prop="username">
+        <el-input
+          v-model="form.username"
           placeholder="请输入学生姓名"
           clearable
           class="!w-[200px]"
         />
       </el-form-item>
-      <el-form-item label="学号：" prop="studentNo">
+      <el-form-item label="学号：" prop="userNo">
         <el-input
-          v-model="form.studentNo"
+          v-model="form.userNo"
           placeholder="请输入学号"
           clearable
           class="!w-[200px]"
         />
-      </el-form-item>
-      <el-form-item label="论文题目：" prop="thesis">
-        <el-input
-          v-model="form.thesis"
-          placeholder="请输入论文题目"
-          clearable
-          class="!w-[200px]"
-        />
-      </el-form-item>
-      <el-form-item label="状态：" prop="status">
-        <el-select
-          v-model="form.status"
-          placeholder="请选择状态"
-          clearable
-          class="!w-[180px]"
-        >
-          <el-option label="审核通过" :value="2" />
-          <el-option label="打回修改" :value="3" />
-          <el-option label="挂起/退修" :value="4" />
-        </el-select>
       </el-form-item>
       <el-form-item>
         <el-button :icon="useRenderIcon(Refresh)" @click="resetForm(formRef)">
@@ -128,7 +103,7 @@ watchEffect(() => {
     </el-form>
 
     <PureTableBar
-      title="已审核列表"
+      title="已评审列表"
       @refresh="onSearch"
       class="overflow-hidden"
     >
@@ -169,22 +144,6 @@ watchEffect(() => {
             >
               下载
             </el-button>
-            <el-popconfirm
-              title="是否修改审核状态?"
-              @confirm="handleChange(row)"
-            >
-              <template #reference>
-                <el-button
-                  class="reset-margin"
-                  link
-                  type="primary"
-                  :size="size"
-                  :icon="useRenderIcon(EditPen)"
-                >
-                  修改
-                </el-button>
-              </template>
-            </el-popconfirm>
           </template>
         </pure-table>
       </template>

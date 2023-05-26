@@ -23,17 +23,25 @@ menus:
   studentManagement: 学生管理
   classManagement: 班级管理
   thesisManagement: 论文管理
-  evaluationResults: 评审结果
+  topicAudit: 课题审核
+  topicList: 课题列表
   dataStatistics: 数据统计
   thesisStatistics: 论文统计
   evaluationStatistics: 评审统计
+  noticeManagement: 公告管理
+  topicManagement: 课题管理
   supervisedStudents: 指导学生
+  dataManagement: 资料管理
+  defenseManagement: 答辩管理
   evaluationManagement: 评审管理
   pendingReview: 待评审
   reviewed: 已评审
   thesisTopicSelection: 论文选题
+  modifyTheTopic: 修改题目
   supervisedTeacher: 指导教师
-  submitThesis: 提交论文
+  submitData: 提交资料
+  defenseInformation: 答辩信息
+  checkTheScore: 查看成绩
   user: 用户中心
   userinfo: 用户信息
   changePassword: 修改密码

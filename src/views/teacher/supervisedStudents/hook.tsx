@@ -1,27 +1,37 @@
 import dayjs from "dayjs";
 import { message } from "@/utils/message";
-import { studentList } from "@/api/teacher";
+import { getStudentList } from "@/api/teacher/student";
+import { ElMessageBox } from "element-plus";
 import { type PaginationProps, LoadingConfig } from "@pureadmin/table";
 import { reactive, ref, onMounted } from "vue";
 import { delay } from "@pureadmin/utils";
-import { useUserStore } from "@/store/modules/user";
 
 export interface Info {
+  /** 编号 */
   id?: number;
-  studentName?: string;
-  studentNo?: string;
+  /** 学生姓名 */
+  username?: string;
+  /** 学号 */
+  userNo?: string;
+  /** 性别 */
   gender?: string;
+  /** 学院 */
   college?: string;
+  /**专业 */
   major?: string;
+  /** 班级 */
   class?: string;
-  thesis?: string;
-  teacherNo?: string;
+  /** 课题名称 */
+  title?: string;
+  /** 选题状态（0待审核、1接收、2驳回） */
   status?: number;
+  /** 创建时间 */
   createTime?: number;
 }
 
 export function useStudent() {
   const dataList = ref<Info[]>();
+  const statusList = reactive(["待审核", "接收", "驳回"]);
   const loading = ref(true);
   const loadingConfig = reactive<LoadingConfig>({
     text: "正在加载第1页...",
@@ -37,13 +47,13 @@ export function useStudent() {
         " style="stroke-width: 4px; fill: rgba(0, 0, 0, 0)"/>
       `
   });
-
   const pagination = reactive<PaginationProps>({
     total: 0,
     pageSize: 10,
     currentPage: 1,
     background: true
   });
+
   const columns: TableColumnList = [
     {
       type: "selection",
@@ -59,12 +69,12 @@ export function useStudent() {
     },
     {
       label: "姓名",
-      prop: "studentName",
+      prop: "username",
       minWidth: 100
     },
     {
       label: "学号",
-      prop: "studentNo",
+      prop: "userNo",
       minWidth: 100
     },
     {
@@ -88,25 +98,21 @@ export function useStudent() {
       minWidth: 100
     },
     {
-      label: "论文题目",
-      prop: "thesis",
+      label: "课题名称",
+      prop: "title",
       minWidth: 150
     },
     {
-      label: "状态",
-      minWidth: 110,
+      label: "选题状态",
+      minWidth: 100,
       cellRenderer: scope => (
         <el-tag
           key={scope.row.id}
-          type={["info", "", "success", "warning", "danger"][scope.row.status]}
+          type={["warning", "primary", "danger"][scope.row.status]}
           class="mx-1"
-          effect="dark"
+          effect="light"
         >
-          {
-            ["未提交", "待审核", "审核通过", "打回修改", "挂起/退修"][
-              scope.row.status
-            ]
-          }
+          {statusList[scope.row.status]}
         </el-tag>
       )
     },
@@ -120,21 +126,46 @@ export function useStudent() {
     {
       label: "操作",
       fixed: "right",
-      width: 150,
+      width: 100,
       slot: "operation"
     }
   ];
 
-  function handleUpdate(row) {
-    console.log(row);
+  function handleUpdate(row, flag) {
+    ElMessageBox.confirm(
+      `确认要 <strong>${
+        flag === 1 ? "接收" : "驳回"
+      }</strong> <strong style='color:var(--el-color-primary)'>
+      ${row.username}</strong> 的选题申请吗?`,
+      "审核提示",
+      {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+        dangerouslyUseHTMLString: true,
+        draggable: true
+      }
+    )
+      .then(() => {
+        loading.value = true;
+        setTimeout(() => {
+          // 更改选题状态
+          row.status = flag;
+          message(`${flag === 1 ? "接收" : "驳回"}成功`, {
+            type: "success"
+          });
+          loading.value = false;
+        }, 500);
+      })
+      .catch(() => {});
   }
 
-  function handleDelete(row) {
-    console.log(row);
-  }
-
-  function handleSizeChange(val: number) {
-    console.log(`${val} items per page`);
+  function handleSizeChange() {
+    loadingConfig.text = `正在加载...`;
+    loading.value = true;
+    delay(500).then(() => {
+      loading.value = false;
+    });
   }
 
   function handleCurrentChange(val: number) {
@@ -145,10 +176,9 @@ export function useStudent() {
     });
   }
 
-  async function onSearch() {
+  function onSearch() {
     loading.value = true;
-    const { userNo } = useUserStore();
-    await studentList({ userNo })
+    getStudentList()
       .then(res => {
         if (res.success) {
           dataList.value = res.data;
@@ -175,10 +205,10 @@ export function useStudent() {
     loadingConfig,
     columns,
     dataList,
+    statusList,
     pagination,
     onSearch,
     handleUpdate,
-    handleDelete,
     handleSizeChange,
     handleCurrentChange
   };
